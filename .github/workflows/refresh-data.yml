@@ -6,6 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
+  actions: write
   contents: write
   pull-requests: write
 
@@ -51,6 +52,7 @@ jobs:
           echo "version=$PACKAGE_VERSION" >> "$GITHUB_OUTPUT"
           echo "wow_version=$WOW_VERSION" >> "$GITHUB_OUTPUT"
       - if: steps.changed.outputs.value == 'true'
+        id: pull-request
         uses: peter-evans/create-pull-request@v8
         with:
           branch: automation/wow-api-data
@@ -68,3 +70,9 @@ jobs:
             data/retail
             package.json
             package-lock.json
+      - name: Run required CI for refresh pull request
+        if: ${{ steps.pull-request.outputs.pull-request-operation == 'created' || steps.pull-request.outputs.pull-request-operation == 'updated' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_BRANCH: ${{ steps.pull-request.outputs.pull-request-branch }}
+        run: gh workflow run ci.yml --ref "$PR_BRANCH"
