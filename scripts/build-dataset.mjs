@@ -8,6 +8,7 @@ import { patchVersion, updateManifest } from './lib/dataset-manifest.mjs';
 
 const DEFAULT_SOURCE = path.resolve('.cache', 'wow-ui-source');
 const DEFAULT_MANIFEST = path.resolve('data', 'manifest.json');
+const CANONICAL_GZIP_OS = 0x0a;
 
 function option(name, fallback) {
   const index = process.argv.indexOf(name);
@@ -86,6 +87,9 @@ async function main() {
     level: 9,
     mtime: 0,
   });
+  // zlib writes a platform-specific OS byte. Keep the initial archive value so
+  // Linux refreshes and local Windows builds produce identical gzip files.
+  compressed[9] = CANONICAL_GZIP_OS;
   await mkdir(path.dirname(output), { recursive: true });
   const temporary = `${output}.tmp`;
   await writeFile(temporary, compressed);

@@ -15,7 +15,9 @@ test('bundles a complete, internally consistent retail version catalog', async (
   assert.equal(versions.at(-1).default, true);
 
   await Promise.all(versions.map(async (entry) => {
-    const dataset = JSON.parse(gunzipSync(await readFile(catalog.datasetPath(entry))));
+    const archive = await readFile(catalog.datasetPath(entry));
+    assert.equal(archive[9], 0x0a, `${entry.file} has a platform-specific gzip header`);
+    const dataset = JSON.parse(gunzipSync(archive));
     assert.equal(dataset.source.patch, entry.version);
     assert.equal(dataset.source.version, entry.clientVersion);
     assert.equal(dataset.source.build, entry.build);
