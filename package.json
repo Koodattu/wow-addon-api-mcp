@@ -1,0 +1,60 @@
+{
+  "name": "wow-addon-api-mcp",
+  "version": "0.1.0",
+  "description": "Up-to-date, standalone MCP server for the World of Warcraft AddOn API",
+  "type": "module",
+  "bin": {
+    "wow-addon-api-mcp": "src/cli.mjs"
+  },
+  "exports": {
+    ".": "./src/server.mjs"
+  },
+  "files": [
+    "data/mainline.json.gz",
+    "src/",
+    "LICENSE",
+    "README.md",
+    "THIRD_PARTY_NOTICES.md"
+  ],
+  "scripts": {
+    "start": "node src/cli.mjs",
+    "test": "node --test",
+    "data:build": "node scripts/build-dataset.mjs",
+    "data:update": "node scripts/update-data.mjs",
+    "data:summary": "node scripts/dataset-summary.mjs",
+    "pack:check": "npm pack --dry-run",
+    "check": "npm test && npm run pack:check",
+    "prepublishOnly": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Koodattu/wow-addon-api-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Koodattu/wow-addon-api-mcp/issues"
+  },
+  "homepage": "https://github.com/Koodattu/wow-addon-api-mcp#readme",
+  "keywords": [
+    "mcp",
+    "world-of-warcraft",
+    "wow",
+    "addon",
+    "lua"
+  ],
+  "author": "Koodattu",
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "luaparse": "^0.3.1"
+  }
+}

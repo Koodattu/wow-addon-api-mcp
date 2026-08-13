@@ -1,0 +1,85 @@
+name: Publish npm
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - data/mainline.json.gz
+      - package.json
+      - package-lock.json
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  id-token: write
+
+concurrency:
+  group: npm-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org/
+          package-manager-cache: false
+      - name: Ensure trusted-publishing npm support
+        run: npm install --global "npm@^11.5.1"
+      - run: npm ci
+      - run: npm test
+      - run: npm run pack:check
+      - id: package
+        shell: bash
+        run: |
+          PACKAGE_NAME=$(node -p "require('./package.json').name")
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          echo "name=$PACKAGE_NAME" >> "$GITHUB_OUTPUT"
+          echo "version=$PACKAGE_VERSION" >> "$GITHUB_OUTPUT"
+      - id: registry
+        shell: bash
+        run: |
+          set +e
+          PACKAGE_RESULT=$(npm view "${{ steps.package.outputs.name }}" name 2>&1)
+          PACKAGE_STATUS=$?
+          set -e
+          if [ "$PACKAGE_STATUS" -eq 0 ]; then
+            echo "package_exists=true" >> "$GITHUB_OUTPUT"
+          elif echo "$PACKAGE_RESULT" | grep -q "E404"; then
+            echo "package_exists=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "$PACKAGE_RESULT" >&2
+            exit "$PACKAGE_STATUS"
+          fi
+
+          set +e
+          VERSION_RESULT=$(npm view "${{ steps.package.outputs.name }}@${{ steps.package.outputs.version }}" version 2>&1)
+          VERSION_STATUS=$?
+          set -e
+          if [ "$VERSION_STATUS" -eq 0 ]; then
+            echo "version_exists=true" >> "$GITHUB_OUTPUT"
+          elif echo "$VERSION_RESULT" | grep -q "E404"; then
+            echo "version_exists=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "$VERSION_RESULT" >&2
+            exit "$VERSION_STATUS"
+          fi
+      - name: Publish package
+        id: publish
+        if: steps.registry.outputs.version_exists == 'false' && (steps.registry.outputs.package_exists == 'true' || github.event_name == 'workflow_dispatch')
+        run: npm publish --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Create GitHub release
+        if: steps.registry.outputs.version_exists == 'true' || steps.publish.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.package.outputs.version }}
+        shell: bash
+        run: |
+          if ! gh release view "v$VERSION" >/dev/null 2>&1; then
+            gh release create "v$VERSION" --target "$GITHUB_SHA" --generate-notes --title "v$VERSION"
+          fi

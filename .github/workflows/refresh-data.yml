@@ -1,0 +1,69 @@
+name: Refresh WoW API data
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: wow-api-data-refresh
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/checkout@v6
+        with:
+          repository: Gethe/wow-ui-source
+          ref: live
+          fetch-depth: 1
+          path: .cache/wow-ui-source
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run data:build
+      - id: changed
+        shell: bash
+        run: |
+          if git diff --quiet -- data/mainline.json.gz; then
+            echo "value=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=true" >> "$GITHUB_OUTPUT"
+          fi
+      - if: steps.changed.outputs.value == 'true'
+        run: npm version patch --no-git-tag-version
+      - if: steps.changed.outputs.value == 'true'
+        run: npm test
+      - if: steps.changed.outputs.value == 'true'
+        id: summary
+        shell: bash
+        run: |
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          WOW_VERSION=$(node -e "const fs=require('fs');const zlib=require('zlib');const data=JSON.parse(zlib.gunzipSync(fs.readFileSync('data/mainline.json.gz')));console.log(data.source.version)")
+          echo "version=$PACKAGE_VERSION" >> "$GITHUB_OUTPUT"
+          echo "wow_version=$WOW_VERSION" >> "$GITHUB_OUTPUT"
+      - if: steps.changed.outputs.value == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: automation/wow-api-data
+          delete-branch: true
+          commit-message: "data: refresh WoW API to ${{ steps.summary.outputs.wow_version }}"
+          title: "data: refresh WoW API to ${{ steps.summary.outputs.wow_version }}"
+          body: |
+            Automated refresh from `Gethe/wow-ui-source` `live`.
+
+            - WoW client: `${{ steps.summary.outputs.wow_version }}`
+            - npm version: `${{ steps.summary.outputs.version }}`
+            - Full dataset and MCP integration tests passed in this workflow.
+          add-paths: |
+            data/mainline.json.gz
+            package.json
+            package-lock.json
