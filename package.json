@@ -1,7 +1,7 @@
 {
   "name": "wow-addon-api-mcp",
   "version": "0.1.0",
-  "description": "Up-to-date, standalone MCP server for the World of Warcraft AddOn API",
+  "description": "Versioned, standalone MCP server for the World of Warcraft AddOn API",
   "type": "module",
   "bin": {
     "wow-addon-api-mcp": "src/cli.mjs"
@@ -10,7 +10,8 @@
     ".": "./src/server.mjs"
   },
   "files": [
-    "data/mainline.json.gz",
+    "data/manifest.json",
+    "data/retail/",
     "src/",
     "LICENSE",
     "README.md",
@@ -20,6 +21,7 @@
     "start": "node src/cli.mjs",
     "test": "node --test",
     "data:build": "node scripts/build-dataset.mjs",
+    "data:history": "node scripts/build-history.mjs",
     "data:update": "node scripts/update-data.mjs",
     "data:summary": "node scripts/dataset-summary.mjs",
     "pack:check": "npm pack --dry-run",

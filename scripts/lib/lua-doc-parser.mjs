@@ -133,7 +133,10 @@ function parse(source, filename) {
 }
 
 export function parseLuaDocumentationSource(source, filename = '<source>') {
-  const ast = parse(source, filename);
+  // A few historical generated tables contain C-style casts even though the
+  // surrounding file is Lua. The cast affects representation, not API shape.
+  const normalizedSource = source.replace(/\([A-Za-z_][A-Za-z0-9_]*\)(?=[A-Za-z_])/g, '');
+  const ast = parse(normalizedSource, filename);
   const candidates = [];
 
   for (const statement of ast.body) {

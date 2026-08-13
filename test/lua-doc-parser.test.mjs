@@ -28,6 +28,19 @@ test('uses the local name for constants-only documentation tables', () => {
   assert.equal(result.Type, 'Constants');
 });
 
+test('accepts C-style casts emitted in historical constants tables', () => {
+  const result = parseLuaDocumentationSource(`
+    local PetConstants = {
+      Tables = {
+        { Name = "PetConsts", Type = "Constants", Values = {
+          { Name = "SLOT", Type = "number", Value = (int)MAX_PETS },
+        } },
+      },
+    }
+  `);
+  assert.equal(result.Tables[0].Values[0].Value, 'MAX_PETS');
+});
+
 test('extracts public mixin methods and inheritance', () => {
   const result = parseLuaMixinsSource(`
     ChildMixin = CreateFromMixins(ParentMixin)

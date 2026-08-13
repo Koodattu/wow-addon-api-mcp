@@ -10,9 +10,11 @@ const packageJson = JSON.parse(await readFile(new URL('../package.json', import.
 if (process.argv.includes('--version')) {
   console.log(packageJson.version);
 } else {
-  const { server, store } = await createServer({ version: packageJson.version });
+  const { server, catalog } = await createServer({ packageVersion: packageJson.version });
   if (process.argv.includes('--dataset-info')) {
-    console.log(JSON.stringify(store.info(), null, 2));
+    console.log(JSON.stringify(catalog.info('latest'), null, 2));
+  } else if (process.argv.includes('--list-versions')) {
+    console.log(catalog.listVersions().map((entry) => `${entry.version}\t${entry.build}${entry.default ? '\tlatest' : ''}`).join('\n'));
   } else {
     await server.connect(new StdioServerTransport());
   }

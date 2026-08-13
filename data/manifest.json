@@ -1,0 +1,449 @@
+{
+  "schemaVersion": 1,
+  "channel": "retail",
+  "default": "12.1.0",
+  "versions": [
+    {
+      "version": "10.0.0",
+      "clientVersion": "10.0.0.46549",
+      "build": "46549",
+      "commit": "28ab53f48c691a976daa33acb509e96d9b850503",
+      "commitDate": "2022-11-09T00:56:54Z",
+      "file": "retail/10.0.0.json.gz",
+      "stats": {
+        "systems": 315,
+        "functions": 2255,
+        "methods": 776,
+        "events": 1361,
+        "enumerations": 377,
+        "structures": 425,
+        "widgets": 48
+      }
+    },
+    {
+      "version": "10.0.2",
+      "clientVersion": "10.0.2.47213",
+      "build": "47213",
+      "commit": "3601b934bca4a9cdf815fd483586a0e5608909ad",
+      "commitDate": "2022-12-20T19:39:45Z",
+      "file": "retail/10.0.2.json.gz",
+      "stats": {
+        "systems": 324,
+        "functions": 2453,
+        "methods": 776,
+        "events": 1384,
+        "enumerations": 399,
+        "structures": 458,
+        "widgets": 48
+      }
+    },
+    {
+      "version": "10.0.5",
+      "clientVersion": "10.0.5.48397",
+      "build": "48397",
+      "commit": "ae4bbd6ba4e86a54a5663fdf7f809781a3e3016e",
+      "commitDate": "2023-03-08T20:26:03Z",
+      "file": "retail/10.0.5.json.gz",
+      "stats": {
+        "systems": 330,
+        "functions": 2498,
+        "methods": 776,
+        "events": 1400,
+        "enumerations": 411,
+        "structures": 474,
+        "widgets": 48
+      }
+    },
+    {
+      "version": "10.0.7",
+      "clientVersion": "10.0.7.48892",
+      "build": "48892",
+      "commit": "0b5d4526f16f56a4c652d0d472620d6591a20f7d",
+      "commitDate": "2023-04-04T14:58:16Z",
+      "file": "retail/10.0.7.json.gz",
+      "stats": {
+        "systems": 334,
+        "functions": 2519,
+        "methods": 776,
+        "events": 1406,
+        "enumerations": 418,
+        "structures": 483,
+        "widgets": 48
+      }
+    },
+    {
+      "version": "10.1.0",
+      "clientVersion": "10.1.0.49741",
+      "build": "49741",
+      "commit": "e8693cc8bc1f4ca2391216badfcf63290328aefd",
+      "commitDate": "2023-05-24T21:31:56Z",
+      "file": "retail/10.1.0.json.gz",
+      "stats": {
+        "systems": 345,
+        "functions": 2581,
+        "methods": 822,
+        "events": 1412,
+        "enumerations": 439,
+        "structures": 499,
+        "widgets": 51
+      }
+    },
+    {
+      "version": "10.1.5",
+      "clientVersion": "10.1.5.50747",
+      "build": "50747",
+      "commit": "3ddb10b8e812ca7f3e5a29a159d21836c2e1b132",
+      "commitDate": "2023-08-03T19:24:53Z",
+      "file": "retail/10.1.5.json.gz",
+      "stats": {
+        "systems": 365,
+        "functions": 2604,
+        "methods": 1051,
+        "events": 1424,
+        "enumerations": 451,
+        "structures": 501,
+        "widgets": 65
+      }
+    },
+    {
+      "version": "10.1.7",
+      "clientVersion": "10.1.7.51972",
+      "build": "51972",
+      "commit": "56fd0eb8e71daccb1fa7139c53c2770e68283942",
+      "commitDate": "2023-11-01T00:46:46Z",
+      "file": "retail/10.1.7.json.gz",
+      "stats": {
+        "systems": 371,
+        "functions": 2640,
+        "methods": 1057,
+        "events": 1428,
+        "enumerations": 458,
+        "structures": 514,
+        "widgets": 66
+      }
+    },
+    {
+      "version": "10.2.0",
+      "clientVersion": "10.2.0.52393",
+      "build": "52393",
+      "commit": "9f404c4219578f2d70a1adb1197a6579f42cbbfe",
+      "commitDate": "2023-12-05T08:18:41Z",
+      "file": "retail/10.2.0.json.gz",
+      "stats": {
+        "systems": 393,
+        "functions": 2797,
+        "methods": 1069,
+        "events": 1433,
+        "enumerations": 464,
+        "structures": 525,
+        "widgets": 66
+      }
+    },
+    {
+      "version": "10.2.5",
+      "clientVersion": "10.2.5.53441",
+      "build": "53441",
+      "commit": "0056a0d15b73844e375e94c45ae1ccc79ab223b3",
+      "commitDate": "2024-02-23T22:41:26Z",
+      "file": "retail/10.2.5.json.gz",
+      "stats": {
+        "systems": 402,
+        "functions": 3067,
+        "methods": 1080,
+        "events": 1440,
+        "enumerations": 470,
+        "structures": 530,
+        "widgets": 67
+      }
+    },
+    {
+      "version": "10.2.6",
+      "clientVersion": "10.2.6.54205",
+      "build": "54205",
+      "commit": "87c526a3ae979a7f5244d635bd8ae952b4313bd8",
+      "commitDate": "2024-04-12T00:16:48Z",
+      "file": "retail/10.2.6.json.gz",
+      "stats": {
+        "systems": 422,
+        "functions": 3307,
+        "methods": 1080,
+        "events": 1441,
+        "enumerations": 472,
+        "structures": 538,
+        "widgets": 67
+      }
+    },
+    {
+      "version": "10.2.7",
+      "clientVersion": "10.2.7.55461",
+      "build": "55461",
+      "commit": "6b65c2922baca3db5a28fb39b69c95cef1047bec",
+      "commitDate": "2024-07-09T06:20:42Z",
+      "file": "retail/10.2.7.json.gz",
+      "stats": {
+        "systems": 424,
+        "functions": 3356,
+        "methods": 1083,
+        "events": 1447,
+        "enumerations": 476,
+        "structures": 544,
+        "widgets": 67
+      }
+    },
+    {
+      "version": "11.0.0",
+      "clientVersion": "11.0.0.55960",
+      "build": "55960",
+      "commit": "742bf9604e0009bebb9a61a4f953d2661f8b387e",
+      "commitDate": "2024-08-06T22:36:02Z",
+      "file": "retail/11.0.0.json.gz",
+      "stats": {
+        "systems": 443,
+        "functions": 3587,
+        "methods": 1093,
+        "events": 1473,
+        "enumerations": 518,
+        "structures": 566,
+        "widgets": 69
+      }
+    },
+    {
+      "version": "11.0.2",
+      "clientVersion": "11.0.2.56819",
+      "build": "56819",
+      "commit": "5076663b5454de9e7522320994ea7cc15b2a961c",
+      "commitDate": "2024-10-01T20:58:48Z",
+      "file": "retail/11.0.2.json.gz",
+      "stats": {
+        "systems": 446,
+        "functions": 3598,
+        "methods": 1093,
+        "events": 1478,
+        "enumerations": 523,
+        "structures": 568,
+        "widgets": 69
+      }
+    },
+    {
+      "version": "11.0.5",
+      "clientVersion": "11.0.5.57637",
+      "build": "57637",
+      "commit": "fa3531505e3e2406f9e3d5a0fbd9644bd5c85227",
+      "commitDate": "2024-11-19T15:30:52Z",
+      "file": "retail/11.0.5.json.gz",
+      "stats": {
+        "systems": 440,
+        "functions": 3594,
+        "methods": 1064,
+        "events": 1469,
+        "enumerations": 526,
+        "structures": 572,
+        "widgets": 68
+      }
+    },
+    {
+      "version": "11.0.7",
+      "clientVersion": "11.0.7.59302",
+      "build": "59302",
+      "commit": "4f305f2f12439acd06fb7a6981858da3672931c0",
+      "commitDate": "2025-02-20T23:06:01Z",
+      "file": "retail/11.0.7.json.gz",
+      "stats": {
+        "systems": 450,
+        "functions": 3637,
+        "methods": 1065,
+        "events": 1483,
+        "enumerations": 543,
+        "structures": 584,
+        "widgets": 68
+      }
+    },
+    {
+      "version": "11.1.0",
+      "clientVersion": "11.1.0.60257",
+      "build": "60257",
+      "commit": "06eca5de5e99789ec1f22667a7f13f500951ca89",
+      "commitDate": "2025-04-19T00:43:59Z",
+      "file": "retail/11.1.0.json.gz",
+      "stats": {
+        "systems": 460,
+        "functions": 3676,
+        "methods": 1070,
+        "events": 1487,
+        "enumerations": 548,
+        "structures": 592,
+        "widgets": 68
+      }
+    },
+    {
+      "version": "11.1.5",
+      "clientVersion": "11.1.5.61265",
+      "build": "61265",
+      "commit": "f843b3fa8985e275a545bcac9d9577a1bba6f4cd",
+      "commitDate": "2025-06-04T21:16:48Z",
+      "file": "retail/11.1.5.json.gz",
+      "stats": {
+        "systems": 468,
+        "functions": 3740,
+        "methods": 1079,
+        "events": 1502,
+        "enumerations": 563,
+        "structures": 606,
+        "widgets": 69
+      }
+    },
+    {
+      "version": "11.1.7",
+      "clientVersion": "11.1.7.61967",
+      "build": "61967",
+      "commit": "1763f5cb047ed1d36d7feba85e2582445253ebf0",
+      "commitDate": "2025-07-14T21:11:02Z",
+      "file": "retail/11.1.7.json.gz",
+      "stats": {
+        "systems": 470,
+        "functions": 3758,
+        "methods": 1080,
+        "events": 1504,
+        "enumerations": 568,
+        "structures": 610,
+        "widgets": 69
+      }
+    },
+    {
+      "version": "11.2.0",
+      "clientVersion": "11.2.0.63305",
+      "build": "63305",
+      "commit": "a931cb6a8805cb1088f50fe7a2e0444ba3175dc2",
+      "commitDate": "2025-09-19T22:01:52Z",
+      "file": "retail/11.2.0.json.gz",
+      "stats": {
+        "systems": 475,
+        "functions": 3807,
+        "methods": 1094,
+        "events": 1508,
+        "enumerations": 583,
+        "structures": 624,
+        "widgets": 69
+      }
+    },
+    {
+      "version": "11.2.5",
+      "clientVersion": "11.2.5.64502",
+      "build": "64502",
+      "commit": "639a9bbc689c4cded69085bdcd66fa22a7db8335",
+      "commitDate": "2025-11-19T05:02:30Z",
+      "file": "retail/11.2.5.json.gz",
+      "stats": {
+        "systems": 487,
+        "functions": 3895,
+        "methods": 1100,
+        "events": 1533,
+        "enumerations": 598,
+        "structures": 647,
+        "widgets": 69
+      }
+    },
+    {
+      "version": "11.2.7",
+      "clientVersion": "11.2.7.65299",
+      "build": "65299",
+      "commit": "368c551ebe17ff537b6df543a79bb9871016cd64",
+      "commitDate": "2026-01-10T02:16:48Z",
+      "file": "retail/11.2.7.json.gz",
+      "stats": {
+        "systems": 513,
+        "functions": 4180,
+        "methods": 1169,
+        "events": 1649,
+        "enumerations": 666,
+        "structures": 694,
+        "widgets": 72
+      }
+    },
+    {
+      "version": "12.0.0",
+      "clientVersion": "12.0.0.65727",
+      "build": "65727",
+      "commit": "750be915ecb623d0a8501188ef516b75c4a26b88",
+      "commitDate": "2026-02-04T20:46:44Z",
+      "file": "retail/12.0.0.json.gz",
+      "stats": {
+        "systems": 568,
+        "functions": 4586,
+        "methods": 1266,
+        "events": 1717,
+        "enumerations": 793,
+        "structures": 766,
+        "widgets": 79
+      }
+    },
+    {
+      "version": "12.0.1",
+      "clientVersion": "12.0.1.66838",
+      "build": "66838",
+      "commit": "60a03548fcbb6c50db31822be2e2c6594e079169",
+      "commitDate": "2026-04-07T00:16:24Z",
+      "file": "retail/12.0.1.json.gz",
+      "stats": {
+        "systems": 575,
+        "functions": 4662,
+        "methods": 1289,
+        "events": 1728,
+        "enumerations": 812,
+        "structures": 769,
+        "widgets": 80
+      }
+    },
+    {
+      "version": "12.0.5",
+      "clientVersion": "12.0.5.67823",
+      "build": "67823",
+      "commit": "9746fb49dbaaf708dbc1110180607154c10b55b7",
+      "commitDate": "2026-05-28T01:01:33Z",
+      "file": "retail/12.0.5.json.gz",
+      "stats": {
+        "systems": 586,
+        "functions": 4731,
+        "methods": 1354,
+        "events": 1739,
+        "enumerations": 825,
+        "structures": 786,
+        "widgets": 84
+      }
+    },
+    {
+      "version": "12.0.7",
+      "clientVersion": "12.0.7.68974",
+      "build": "68974",
+      "commit": "c878310d8432a65bac029c7bacc24eeb2e662bbe",
+      "commitDate": "2026-08-03T23:01:08Z",
+      "file": "retail/12.0.7.json.gz",
+      "stats": {
+        "systems": 592,
+        "functions": 4760,
+        "methods": 1384,
+        "events": 1741,
+        "enumerations": 795,
+        "structures": 790,
+        "widgets": 87
+      }
+    },
+    {
+      "version": "12.1.0",
+      "clientVersion": "12.1.0.69283",
+      "build": "69283",
+      "commit": "710f59e457317676c0f699e6addaf2c405c2a1a4",
+      "commitDate": "2026-08-13T01:46:01Z",
+      "file": "retail/12.1.0.json.gz",
+      "stats": {
+        "systems": 612,
+        "functions": 4898,
+        "methods": 1448,
+        "events": 1782,
+        "enumerations": 844,
+        "structures": 832,
+        "widgets": 91
+      }
+    }
+  ]
+}

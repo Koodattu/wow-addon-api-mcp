@@ -174,17 +174,41 @@ async function extractIntrinsicWidgets(interfaceRoot, sourceRoot) {
   });
 }
 
-function deduplicate(items, key, label) {
+function deduplicate(items, key, label, resolveConflict) {
   const result = new Map();
   for (const item of items) {
     const itemKey = key(item);
     const existing = result.get(itemKey);
     if (existing && JSON.stringify(existing) !== JSON.stringify(item)) {
-      throw new Error(`Conflicting ${label} entries for ${itemKey}: ${existing.sourceFile} and ${item.sourceFile}`);
+      if (!resolveConflict) {
+        throw new Error(`Conflicting ${label} entries for ${itemKey}: ${existing.sourceFile} and ${item.sourceFile}`);
+      }
+      result.set(itemKey, resolveConflict(existing, item, itemKey));
+      continue;
     }
     result.set(itemKey, item);
   }
   return [...result.values()];
+}
+
+function resolveTypeConflict(left, right, name) {
+  const leftFields = left.fields.length;
+  const rightFields = right.fields.length;
+  if (leftFields === rightFields) {
+    throw new Error(`Conflicting type entries for ${name} have equal field counts: ${left.sourceFile} and ${right.sourceFile}`);
+  }
+  const selected = leftFields > rightFields ? left : right;
+  const alternate = selected === left ? right : left;
+  return {
+    ...selected,
+    metadata: {
+      ...selected.metadata,
+      AlternateSourceFiles: [...new Set([
+        ...(selected.metadata.AlternateSourceFiles ?? []),
+        alternate.sourceFile,
+      ])],
+    },
+  };
 }
 
 export async function extractDataset(sourceRoot, source) {
@@ -260,7 +284,7 @@ export async function extractDataset(sourceRoot, source) {
     .sort((a, b) => a.fullName.localeCompare(b.fullName));
   const normalizedEvents = deduplicate(events, (entry) => `${entry.literalName}\0${entry.namespace ?? ''}`, 'event')
     .sort((a, b) => a.literalName.localeCompare(b.literalName));
-  const normalizedTypes = deduplicate(types, (entry) => entry.name, 'type')
+  const normalizedTypes = deduplicate(types, (entry) => entry.name, 'type', resolveTypeConflict)
     .sort((a, b) => a.name.localeCompare(b.name));
   const normalizedWidgets = deduplicate(widgets, (entry) => entry.name, 'widget')
     .map((widget) => ({ ...widget, methods: widget.methods.sort((a, b) => a.name.localeCompare(b.name)) }))
