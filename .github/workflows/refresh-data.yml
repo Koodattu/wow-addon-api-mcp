@@ -51,7 +51,7 @@ jobs:
           echo "version=$PACKAGE_VERSION" >> "$GITHUB_OUTPUT"
           echo "wow_version=$WOW_VERSION" >> "$GITHUB_OUTPUT"
       - if: steps.changed.outputs.value == 'true'
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           branch: automation/wow-api-data
           delete-branch: true
