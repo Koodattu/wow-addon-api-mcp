@@ -5,7 +5,7 @@ import { loadStore } from '../src/data-store.mjs';
 
 const store = await loadStore();
 
-test('bundles a pinned mainline dataset', () => {
+test('selects the pinned latest retail dataset by default', () => {
   assert.ok(Number.parseInt(store.info().source.version, 10) >= 12);
   assert.ok(store.info().source.commit);
   assert.ok(store.info().stats.functions > 4000);

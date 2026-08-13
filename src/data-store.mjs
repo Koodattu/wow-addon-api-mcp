@@ -1,6 +1,8 @@
 import { gunzipSync } from 'node:zlib';
 import { readFile } from 'node:fs/promises';
-const DEFAULT_DATASET = new URL('../data/mainline.json.gz', import.meta.url);
+import path from 'node:path';
+
+const DEFAULT_MANIFEST = new URL('../data/manifest.json', import.meta.url);
 const SECURITY_KEY = /(secret|restriction|taint|unsecure|secure|combat|unittoken|unitaura|forbidden|protected)/i;
 
 function normalized(value) {
@@ -116,7 +118,91 @@ export class WowApiStore {
   }
 }
 
-export async function loadStore(datasetPath = DEFAULT_DATASET) {
+export async function loadStore(datasetPath) {
+  if (datasetPath == null) return (await loadCatalog()).store('latest');
   const buffer = await readFile(datasetPath);
   return new WowApiStore(JSON.parse(gunzipSync(buffer)));
+}
+
+export class DatasetCatalog {
+  constructor(manifest, manifestPath, cacheSize = 2) {
+    if (manifest.schemaVersion !== 1) throw new Error(`Unsupported dataset manifest schema: ${manifest.schemaVersion}`);
+    if (manifest.channel !== 'retail') throw new Error(`Unsupported dataset channel: ${manifest.channel}`);
+    if (!Array.isArray(manifest.versions) || manifest.versions.length === 0) throw new Error('Dataset manifest has no versions');
+    this.manifest = manifest;
+    this.manifestPath = manifestPath;
+    this.cacheSize = cacheSize;
+    this.cache = new Map();
+    this.entries = new Map(manifest.versions.map((entry) => [entry.version, entry]));
+    if (this.entries.size !== manifest.versions.length) throw new Error('Dataset manifest contains duplicate versions');
+    if (!this.entries.has(manifest.default)) throw new Error(`Dataset manifest default is unavailable: ${manifest.default}`);
+  }
+
+  listVersions() {
+    return this.manifest.versions.map((entry) => ({ ...entry, default: entry.version === this.manifest.default }));
+  }
+
+  resolve(version = 'latest') {
+    const requested = String(version ?? 'latest').trim();
+    if (!requested || requested.toLowerCase() === 'latest' || requested.toLowerCase() === 'current') {
+      return this.manifest.default;
+    }
+    if (this.entries.has(requested)) return requested;
+
+    const clientMatch = this.manifest.versions.find((entry) => entry.clientVersion === requested || entry.build === requested);
+    if (clientMatch) return clientMatch.version;
+
+    const normalizedPatch = /^(\d+\.\d+)$/.test(requested) ? `${requested}.0` : null;
+    if (normalizedPatch && this.entries.has(normalizedPatch)) return normalizedPatch;
+    throw new Error(`Unsupported retail version "${requested}". Call list_versions for valid values.`);
+  }
+
+  entry(version = 'latest') {
+    return this.entries.get(this.resolve(version));
+  }
+
+  info(version = 'latest') {
+    const selected = this.entry(version);
+    return {
+      schemaVersion: this.manifest.schemaVersion,
+      channel: this.manifest.channel,
+      default: this.manifest.default,
+      selected,
+      availableVersions: this.manifest.versions.length,
+    };
+  }
+
+  versionsBetween(fromVersion, toVersion) {
+    const from = this.resolve(fromVersion ?? this.manifest.versions[0].version);
+    const to = this.resolve(toVersion ?? this.manifest.default);
+    const fromIndex = this.manifest.versions.findIndex((entry) => entry.version === from);
+    const toIndex = this.manifest.versions.findIndex((entry) => entry.version === to);
+    if (fromIndex > toIndex) throw new Error(`from_version ${from} is newer than to_version ${to}`);
+    return this.manifest.versions.slice(fromIndex, toIndex + 1);
+  }
+
+  datasetPath(entry) {
+    if (this.manifestPath instanceof URL) return new URL(entry.file, this.manifestPath);
+    return path.resolve(path.dirname(this.manifestPath), entry.file);
+  }
+
+  async store(version = 'latest') {
+    const resolved = this.resolve(version);
+    if (this.cache.has(resolved)) {
+      const store = this.cache.get(resolved);
+      this.cache.delete(resolved);
+      this.cache.set(resolved, store);
+      return store;
+    }
+
+    const store = await loadStore(this.datasetPath(this.entries.get(resolved)));
+    this.cache.set(resolved, store);
+    while (this.cache.size > this.cacheSize) this.cache.delete(this.cache.keys().next().value);
+    return store;
+  }
+}
+
+export async function loadCatalog(manifestPath = DEFAULT_MANIFEST, options = {}) {
+  const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
+  return new DatasetCatalog(manifest, manifestPath, options.cacheSize ?? 2);
 }

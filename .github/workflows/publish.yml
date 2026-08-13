@@ -4,7 +4,8 @@ on:
   push:
     branches: [main]
     paths:
-      - data/mainline.json.gz
+      - data/manifest.json
+      - data/retail/**
       - package.json
       - package-lock.json
   workflow_dispatch:

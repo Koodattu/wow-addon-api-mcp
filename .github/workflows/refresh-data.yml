@@ -33,7 +33,7 @@ jobs:
       - id: changed
         shell: bash
         run: |
-          if git diff --quiet -- data/mainline.json.gz; then
+          if [ -z "$(git status --porcelain -- data/manifest.json data/retail)" ]; then
             echo "value=false" >> "$GITHUB_OUTPUT"
           else
             echo "value=true" >> "$GITHUB_OUTPUT"
@@ -47,7 +47,7 @@ jobs:
         shell: bash
         run: |
           PACKAGE_VERSION=$(node -p "require('./package.json').version")
-          WOW_VERSION=$(node -e "const fs=require('fs');const zlib=require('zlib');const data=JSON.parse(zlib.gunzipSync(fs.readFileSync('data/mainline.json.gz')));console.log(data.source.version)")
+          WOW_VERSION=$(node -e "const m=require('./data/manifest.json');const e=m.versions.find(v=>v.version===m.default);console.log(e.clientVersion)")
           echo "version=$PACKAGE_VERSION" >> "$GITHUB_OUTPUT"
           echo "wow_version=$WOW_VERSION" >> "$GITHUB_OUTPUT"
       - if: steps.changed.outputs.value == 'true'
@@ -62,8 +62,9 @@ jobs:
 
             - WoW client: `${{ steps.summary.outputs.wow_version }}`
             - npm version: `${{ steps.summary.outputs.version }}`
-            - Full dataset and MCP integration tests passed in this workflow.
+            - The version manifest, selected retail snapshot, and MCP integration tests passed in this workflow.
           add-paths: |
-            data/mainline.json.gz
+            data/manifest.json
+            data/retail
             package.json
             package-lock.json
