@@ -139,15 +139,22 @@ export function parseResourceLua(source, filename) {
   return entries;
 }
 
-export async function extractFrameXmlResources(sourceRoot, tocFiles) {
+export async function extractFrameXmlResources(sourceRoot, tocFiles, { allowPartial = false } = {}) {
   const files = new Map();
   const entries = [];
   const excluded = [];
+  const issues = [];
+  let parsedFiles = 0;
+  function incomplete(sourceFile, message) {
+    if (!allowPartial) throw new Error(message);
+    issues.push({ sourceFile, message });
+    return null;
+  }
   const relative = (file) => path.relative(sourceRoot, file).split(path.sep).join('/');
   const directories = new Map();
   function sourcePath(file) {
     const name = relative(file);
-    if (name.startsWith('../') || path.isAbsolute(name)) throw new Error('Source include leaves checkout: ' + name);
+    if (name === '..' || name.startsWith('../') || path.isAbsolute(name)) throw new Error('Source include leaves checkout: ' + name);
     let current = path.resolve(sourceRoot);
     for (const part of name.split('/')) {
       if (!directories.has(current)) directories.set(current, readdirSync(current));
@@ -166,6 +173,7 @@ export async function extractFrameXmlResources(sourceRoot, tocFiles) {
   }).sort((a, b) => relative(a) < relative(b) ? -1 : relative(a) > relative(b) ? 1 : 0);
 
   async function include(file, addon) {
+    if (!file) return;
     if (files.has(file)) return;
     if (!['.lua', '.xml'].includes(path.extname(file))) return;
     const sourceFile = relative(file);
@@ -174,12 +182,19 @@ export async function extractFrameXmlResources(sourceRoot, tocFiles) {
     if (sourceFile.includes('/Blizzard_APIDocumentation')) return;
     files.set(file, addon);
     const source = await readFile(file, 'utf8');
+    let parsed;
+    try {
+      parsed = file.endsWith('.xml') ? parseResourceXml(source) : parseResourceLua(source, sourceFile);
+    } catch (error) {
+      incomplete(sourceFile, error.message);
+      return;
+    }
+    parsedFiles++;
     if (file.endsWith('.xml')) {
-      const parsed = parseResourceXml(source);
       entries.push(...parsed.entries.map((entry) => ({ ...entry, sourceFile, addon })));
       for (const included of parsed.includes) await include(resolveInclude(file, included, addon), addon);
     } else {
-      entries.push(...parseResourceLua(source, sourceFile).map((entry) => ({ ...entry, sourceFile, addon })));
+      entries.push(...parsed.map((entry) => ({ ...entry, sourceFile, addon })));
     }
   }
 
@@ -187,24 +202,25 @@ export async function extractFrameXmlResources(sourceRoot, tocFiles) {
     const replaced = target.replaceAll('[Family]', 'Mainline').replaceAll('[Game]', 'Standard').replaceAll('\\', '/');
     if (/^Interface\//i.test(replaced)) {
       const file = sourcePath(path.resolve(sourceRoot, replaced));
-      if (!file) throw new Error('Missing source include: ' + relative(from) + ' -> ' + target);
+      if (!file) return incomplete(relative(from), 'Missing source include: ' + relative(from) + ' -> ' + target);
       return file;
     }
     const addonRoot = selected.find((toc) => path.basename(path.dirname(toc)) === addon);
     const sibling = sourcePath(path.resolve(path.dirname(from), replaced));
     const rootRelative = sourcePath(path.resolve(addonRoot ? path.dirname(addonRoot) : path.dirname(from), replaced));
     if (sibling && rootRelative && sibling !== rootRelative) {
-      throw new Error('Ambiguous source include: ' + relative(from) + ' -> ' + target);
+      return incomplete(relative(from), 'Ambiguous source include: ' + relative(from) + ' -> ' + target);
     }
-    if (!sibling && !rootRelative) throw new Error('Missing source include: ' + relative(from) + ' -> ' + target);
+    if (!sibling && !rootRelative) return incomplete(relative(from), 'Missing source include: ' + relative(from) + ' -> ' + target);
     return sibling ?? rootRelative;
   }
 
   for (const toc of selected) {
+    if (relative(toc).includes('/Blizzard_APIDocumentation')) continue;
     const source = await readFile(toc, 'utf8');
     const headers = Object.fromEntries([...source.matchAll(/^##\s*(AllowLoad(?:GameType)?):\s*(.*)$/gmi)]
       .map((match) => [match[1], match[2].trim()]));
-    if (!allowed(headers)) {
+    if (!allowed(headers) || relative(toc).startsWith('Interface/GlueXML/')) {
       excluded.push(relative(toc));
       continue;
     }
@@ -230,7 +246,7 @@ export async function extractFrameXmlResources(sourceRoot, tocFiles) {
   return {
     schemaVersion: 1,
     scope: 'mainline-source',
-    coverage: { files: files.size, excludedAddOns: excluded },
+    coverage: { status: issues.length ? 'partial' : 'complete', files: files.size, parsedFiles, excludedAddOns: excluded, issues },
     counts: Object.fromEntries(['symbol', 'template', 'mixin', 'frame', 'cvar', 'atlas']
       .map((kind) => [kind, new Set(sorted.filter((entry) => entry.kind === kind).map((entry) => entry.name)).size])),
     entries: sorted,

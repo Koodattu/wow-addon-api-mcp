@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "sourceKind": "community-curated",
+  "license": "CC-BY-SA-4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+  "attribution": "Adapted by the wow-addon-api-mcp contributors from Warcraft Wiki contributors; individual page revisions and histories are linked below. Summaries and structured contracts are adaptations, not official Blizzard documentation.",
+  "reviewedClientVersion": "12.1.0.69587",
+  "reviewedAt": "2026-09-05",
+  "validation": "Documentation review and offline contract checks; not executed in the WoW client.",
+  "entries": [
+    {
+      "name": "CreateFrame",
+      "overloads": [{"arguments": [
+        {"Name": "frameType", "Type": "string", "Nilable": false},
+        {"Name": "name", "Type": "string", "Nilable": true},
+        {"Name": "parent", "Type": "Frame", "Nilable": true},
+        {"Name": "template", "Type": "string", "Nilable": true},
+        {"Name": "id", "Type": "number", "Nilable": true}
+      ]}],
+      "returns": [{"Name": "frame", "Type": "Frame or another creatable frame type", "Nilable": false}],
+      "notes": [
+        "An omitted name creates an anonymous object; a supplied name exposes it globally.",
+        "The parent is a frame object or nil, not a string containing its name.",
+        "The template argument accepts comma-separated virtual XML template names. Inherited OnLoad handlers run during creation.",
+        "Frame objects are retained by the client; do not repeatedly create them expecting garbage collection."
+      ],
+      "limitations": ["The list of accepted frame types is not enumerated here. XML declarations alone do not prove that a type can be created by addons.", "This contract does not grant access to protected behavior during combat."],
+      "sources": [
+        {"title": "Warcraft Wiki: CreateFrame", "url": "https://warcraft.wiki.gg/wiki/API:CreateFrame?oldid=6818673", "historyUrl": "https://warcraft.wiki.gg/wiki/API:CreateFrame?action=history", "revision": "6818673"}
+      ]
+    },
+    {
+      "name": "hooksecurefunc",
+      "overloads": [
+        {"arguments": [{"Name": "functionName", "Type": "string", "Nilable": false}, {"Name": "hookfunc", "Type": "function", "Nilable": false}]},
+        {"arguments": [{"Name": "table", "Type": "table", "Nilable": false}, {"Name": "functionName", "Type": "string", "Nilable": false}, {"Name": "hookfunc", "Type": "function", "Nilable": false}]}
+      ],
+      "returns": [],
+      "notes": [
+        "Installs a post-hook on a named function in the supplied table, or in the global table when the table is omitted.",
+        "The hook receives the original arguments after the original call. Hook return values are discarded; the original function's return values are preserved.",
+        "Repeated installations add hooks. Removing them requires reloading the UI.",
+        "Previously retained function references, including XML-held references, may not observe the replacement."
+      ],
+      "restrictions": {
+        "unhookableNamesSince": "11.0.0",
+        "unhookableNames": ["getfenv", "getmetatable", "hooksecurefunc", "ipairs", "issecurevalue", "issecurevariable", "next", "rawget", "rawset", "pairs", "pcall", "pcallwithenv", "scrub", "securecall", "securecallfunction", "secureexecuterange", "select", "setfenv", "setmetatable", "type", "unpack", "wipe", "xpcall"]
+      },
+      "limitations": ["A secure post-hook does not make the hook body secure or authorize protected calls."],
+      "sources": [
+        {"title": "Warcraft Wiki: hooksecurefunc", "url": "https://warcraft.wiki.gg/wiki/API:hooksecurefunc?oldid=6842318", "historyUrl": "https://warcraft.wiki.gg/wiki/API:hooksecurefunc?action=history", "revision": "6842318"}
+      ]
+    },
+    {
+      "name": "issecurevariable",
+      "overloads": [
+        {"arguments": [{"Name": "variable", "Type": "string|number", "Nilable": false}]},
+        {"arguments": [{"Name": "table", "Type": "table", "Nilable": false}, {"Name": "variable", "Type": "string|number", "Nilable": false}]}
+      ],
+      "returns": [{"Name": "isSecure", "Type": "boolean", "Nilable": false}, {"Name": "taintSource", "Type": "string", "Nilable": true}],
+      "notes": [
+        "Inspects a named table value; omitting the table selects the global environment. It cannot inspect a local variable.",
+        "Numeric names are converted to strings. Other key types are not supported.",
+        "Missing values are secure. An __index lookup can affect a check when the direct value is nil.",
+        "The second result identifies the tainting addon, is empty for macro taint, or is nil for a secure value."
+      ],
+      "limitations": ["A secure value does not prove that the current execution path is secure."],
+      "sources": [
+        {"title": "Warcraft Wiki: issecurevariable", "url": "https://warcraft.wiki.gg/wiki/API:issecurevariable?oldid=6842324", "historyUrl": "https://warcraft.wiki.gg/wiki/API:issecurevariable?action=history", "revision": "6842324"},
+        {"title": "wowless issecurevariable tests (corroboration)", "url": "https://github.com/wowless/wowless/blob/3cafcecffe23e451f0d76629dedda3add9171fb9/data/test/issecurevariable.lua"}
+      ]
+    },
+    {
+      "name": "issecure",
+      "overloads": [{"arguments": []}],
+      "returns": [{"Name": "isSecure", "Type": "boolean", "Nilable": false}],
+      "notes": ["Reports whether the current execution path is secure. The calling path matters; the identity of a function alone is insufficient."],
+      "limitations": ["Calling this function does not change the security of the execution path."],
+      "sources": [
+        {"title": "Warcraft Wiki: issecure", "url": "https://warcraft.wiki.gg/wiki/API:issecure?oldid=6842321", "historyUrl": "https://warcraft.wiki.gg/wiki/API:issecure?action=history", "revision": "6842321"}
+      ]
+    }
+  ],
+  "migrations": [
+    {
+      "name": "UnitAura",
+      "deprecatedIn": "10.2.5",
+      "removedIn": "11.0.2",
+      "replacement": "C_UnitAuras.GetAuraDataByIndex",
+      "notes": [
+        "The replacement returns a nullable AuraData structure instead of the legacy positional tuple. Update consumers of the returned values rather than performing only a function-name substitution.",
+        "For the selected target build, inspect the replacement's generated contract and AuraData fields. Aura-access and secret-value restrictions can prevent legacy filtering, comparisons, or arithmetic from remaining valid.",
+        "Lifecycle annotations come from community documentation, not an inference from missing entries in the generated API catalog."
+      ],
+      "sources": [
+        {"title": "Warcraft Wiki: UnitAura", "url": "https://warcraft.wiki.gg/wiki/API:UnitAura?oldid=6846341", "historyUrl": "https://warcraft.wiki.gg/wiki/API:UnitAura?action=history", "revision": "6846341"}
+      ]
+    }
+  ]
+}

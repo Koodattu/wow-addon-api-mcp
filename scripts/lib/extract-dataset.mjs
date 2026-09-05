@@ -208,7 +208,7 @@ function resolveTypeConflict(left, right, name) {
   };
 }
 
-export async function extractDataset(sourceRoot, source) {
+export async function extractDataset(sourceRoot, source, { includeResources = true, allowPartialResources = false } = {}) {
   const documentationRoot = path.join(sourceRoot, 'Interface', 'AddOns', 'Blizzard_APIDocumentationGenerated');
   const documentationFiles = (await walkFiles(documentationRoot, '.lua')).sort();
   const systems = [];
@@ -295,7 +295,8 @@ export async function extractDataset(sourceRoot, source) {
   return {
     schemaVersion: 1,
     source,
-    resources: await extractFrameXmlResources(sourceRoot, await walkFiles(path.join(sourceRoot, 'Interface'), '.toc')),
+    ...(includeResources ? { resources: await extractFrameXmlResources(sourceRoot,
+      await walkFiles(path.join(sourceRoot, 'Interface'), '.toc'), { allowPartial: allowPartialResources }) } : {}),
     stats: {
       systems: normalizedSystems.length,
       functions: normalizedFunctions.filter((entry) => entry.kind === 'function').length,

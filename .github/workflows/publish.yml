@@ -6,6 +6,7 @@ on:
     paths:
       - data/manifest.json
       - data/retail/**
+      - data/resources/**
       - package.json
       - package-lock.json
   workflow_dispatch:

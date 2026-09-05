@@ -1,0 +1,18 @@
+[
+  {
+    "task": "Explain the cooldown template and inherited widget method used by a real addon",
+    "source": "https://github.com/WeakAuras/WeakAuras2/blob/cc68817a6d9827e44f60171231057c12139cddd9/WeakAuras/RegionTypes/Icon.lua#L276",
+    "calls": [
+      {"name": "lookup_resource", "arguments": {"query": "CooldownFrameTemplate", "kind": "template"}, "contains": ["framexml-declaration", "CooldownFrameTemplate", "sourceUrl"]},
+      {"name": "lookup_api", "arguments": {"name": "Cooldown:SetDrawBling", "kind": "function"}, "contains": ["SetDrawBling", "Arguments", "Source:"]}
+    ]
+  },
+  {
+    "task": "Inspect the replacement contract used by a legacy UnitAura adapter",
+    "source": "https://github.com/WeakAuras/WeakAuras2/blob/cc68817a6d9827e44f60171231057c12139cddd9/WeakAuras/AuraEnvironment.lua#L14",
+    "calls": [
+      {"name": "lookup_api", "arguments": {"name": "C_UnitAuras.GetAuraDataByIndex", "kind": "function"}, "contains": ["AuraData", "Nilable", "RequiresUnitAuraAccess"]},
+      {"name": "compare_api", "arguments": {"name": "UnitAura", "kind": "function", "from_version": "10.0.0", "to_version": "12.1.0"}, "contains": ["No exact matching entry", "documentation catalog"]}
+    ]
+  }
+]

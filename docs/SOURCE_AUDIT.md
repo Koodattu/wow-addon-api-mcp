@@ -2,6 +2,8 @@
 
 Audited September 5, 2026, against Gethe retail build 12.1.0.69587, commit `8ea15b61e45c0ed4eba01439c90757f86eb78d34`, and Ketho/BlizzardInterfaceResources live commit `36dd01db2d8fa5086dffda5cbfb3d55f4a70e526`.
 
+This section records the initial 0.2.0 audit. Version 0.3.0 backfills resources for all 26 snapshots, explicitly marks 11 historical snapshots partial, adds four separately licensed engine contracts and UnitAura guidance, and supplies an optional local runtime collector. See [validation and remaining limits](VALIDATION.md). The initial gaps described below are retained as audit history, not a statement of current tool coverage.
+
 ## Source roles
 
 [BlizzardInterfaceResources](https://github.com/Ketho/BlizzardInterfaceResources) complements the generated Blizzard API documentation. Its runtime global inventory identifies gaps such as CreateFrame and hooksecurefunc; its templates, mixins, frames, CVars, atlas metadata, and localized strings support UI development. Its event-name inventory matched all 1,782 events already bundled at audit time. Widget and ScriptObject inventories substantially overlap the documented widget catalog and are best used as coverage checks rather than replacements for signatures or restrictions.

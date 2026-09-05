@@ -25,6 +25,20 @@ function hasSecurityMetadata(value) {
   ));
 }
 
+function resourceMatches(resources, query, { kind, exact = false, limit = 20, offset = 0 } = {}) {
+  if (!resources) return { available: false, total: 0, entries: [] };
+  const needle = normalized(query.trim());
+  const matches = resources.entries
+    .filter((entry) => (!kind || entry.kind === kind) && (exact
+      ? normalized(entry.name) === needle : normalized(entry.name).includes(needle)))
+    .sort((a, b) => score(a, needle) - score(b, needle)
+      || Number(a.sourceKind === 'framexml-reference') - Number(b.sourceKind === 'framexml-reference')
+      || a.name.localeCompare(b.name) || a.sourceFile.localeCompare(b.sourceFile) || a.sourceLine - b.sourceLine);
+  return { available: true, scope: resources.scope, coverage: resources.coverage,
+    total: matches.length, offset, nextOffset: offset + limit < matches.length ? offset + limit : null,
+    entries: matches.slice(offset, offset + limit) };
+}
+
 export class WowApiStore {
   constructor(dataset) {
     this.dataset = dataset;
@@ -81,20 +95,7 @@ export class WowApiStore {
   }
 
   resources(query, { kind, exact = false, limit = 20, offset = 0 } = {}) {
-    const resources = this.dataset.resources;
-    if (!resources) return { available: false, total: 0, entries: [] };
-    const needle = normalized(query.trim());
-    const matches = resources.entries
-      .filter((entry) => (!kind || entry.kind === kind) && (exact
-        ? normalized(entry.name) === needle : normalized(entry.name).includes(needle)))
-      .sort((a, b) => score(a, needle) - score(b, needle)
-        || Number(a.sourceKind === 'framexml-reference') - Number(b.sourceKind === 'framexml-reference')
-        || a.name.localeCompare(b.name) || a.sourceFile.localeCompare(b.sourceFile) || a.sourceLine - b.sourceLine);
-    return {
-      available: true, scope: resources.scope, total: matches.length, offset,
-      nextOffset: offset + limit < matches.length ? offset + limit : null,
-      entries: matches.slice(offset, offset + limit),
-    };
+    return resourceMatches(this.dataset.resources, query, { kind, exact, limit, offset });
   }
 
   namespace(namespace) {
@@ -153,6 +154,7 @@ export class DatasetCatalog {
     this.manifestPath = manifestPath;
     this.cacheSize = cacheSize;
     this.cache = new Map();
+    this.resourceCache = new Map();
     this.entries = new Map(manifest.versions.map((entry) => [entry.version, entry]));
     if (this.entries.size !== manifest.versions.length) throw new Error('Dataset manifest contains duplicate versions');
     if (!this.entries.has(manifest.default)) throw new Error(`Dataset manifest default is unavailable: ${manifest.default}`);
@@ -204,6 +206,24 @@ export class DatasetCatalog {
   datasetPath(entry) {
     if (this.manifestPath instanceof URL) return new URL(entry.file, this.manifestPath);
     return path.resolve(path.dirname(this.manifestPath), entry.file);
+  }
+
+  async lookupResources(query, { version = 'latest', ...options } = {}) {
+    const entry = this.entry(version);
+    if (!entry.resourceFile) return (await this.store(version)).resources(query, options);
+    if (!this.resourceCache.has(entry.version)) {
+      const file = this.datasetPath({ file: entry.resourceFile });
+      const dataset = JSON.parse(gunzipSync(await readFile(file)));
+      if (dataset.schemaVersion !== 1 || dataset.source.commit !== entry.commit || dataset.source.version !== entry.clientVersion) {
+        throw new Error('Resource snapshot does not match the selected API build');
+      }
+      this.resourceCache.set(entry.version, dataset.resources);
+      while (this.resourceCache.size > this.cacheSize) this.resourceCache.delete(this.resourceCache.keys().next().value);
+    }
+    const resources = this.resourceCache.get(entry.version);
+    this.resourceCache.delete(entry.version);
+    this.resourceCache.set(entry.version, resources);
+    return resourceMatches(resources, query, options);
   }
 
   async store(version = 'latest') {

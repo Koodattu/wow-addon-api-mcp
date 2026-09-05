@@ -134,13 +134,53 @@ function parse(source, filename) {
 
 export function parseLuaSource(source, filename = '<source>') {
   try {
-    return luaparse.parse(source.replace(/^\uFEFF/, ''), {
+    return luaparse.parse(normalizeSourceEscapes(source.replace(/^\uFEFF/, '')), {
       comments: false, locations: true, scope: true, luaVersion: '5.2',
     });
   } catch (error) {
     error.message = `${filename}: ${error.message}`;
     throw error;
   }
+}
+
+// WoW accepts Lua 5.1 string escapes alongside newer statement syntax.
+// Normalize unknown short-string escapes without touching comments or long strings.
+export function normalizeSourceEscapes(source) {
+  let result = '';
+  for (let index = 0; index < source.length;) {
+    const comment = source.startsWith('--', index);
+    const start = index + (comment ? 2 : 0);
+    const long = /^\[(=*)\[/.exec(source.slice(start));
+    if (long) {
+      const close = ']' + long[1] + ']';
+      const end = source.indexOf(close, start + long[0].length);
+      const next = end < 0 ? source.length : end + close.length;
+      result += source.slice(index, next);
+      index = next;
+    } else if (comment) {
+      const end = source.indexOf('\n', index);
+      const next = end < 0 ? source.length : end;
+      result += source.slice(index, next);
+      index = next;
+    } else if (source[index] === '"' || source[index] === "'") {
+      const quote = source[index++];
+      result += quote;
+      while (index < source.length) {
+        const character = source[index++];
+        if (character === '\\' && index < source.length) {
+          const escaped = source[index++];
+          if (/[abfnrtv\\'"\r\n0-9xz]/.test(escaped)) result += '\\';
+          result += escaped;
+        } else {
+          result += character;
+          if (character === quote) break;
+        }
+      }
+    } else {
+      result += source[index++];
+    }
+  }
+  return result;
 }
 
 export function parseLuaDocumentationSource(source, filename = '<source>') {

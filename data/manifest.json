@@ -18,7 +18,17 @@
         "enumerations": 377,
         "structures": 425,
         "widgets": 48
-      }
+      },
+      "resourceFile": "resources/10.0.0.json.gz",
+      "resourceCounts": {
+        "symbol": 38928,
+        "template": 2741,
+        "mixin": 1935,
+        "frame": 3233,
+        "cvar": 230,
+        "atlas": 2156
+      },
+      "resourceCoverage": "partial"
     },
     {
       "version": "10.0.2",
@@ -35,7 +45,17 @@
         "enumerations": 399,
         "structures": 458,
         "widgets": 48
-      }
+      },
+      "resourceFile": "resources/10.0.2.json.gz",
+      "resourceCounts": {
+        "symbol": 39478,
+        "template": 2761,
+        "mixin": 1965,
+        "frame": 3230,
+        "cvar": 232,
+        "atlas": 2182
+      },
+      "resourceCoverage": "partial"
     },
     {
       "version": "10.0.5",
@@ -52,7 +72,17 @@
         "enumerations": 411,
         "structures": 474,
         "widgets": 48
-      }
+      },
+      "resourceFile": "resources/10.0.5.json.gz",
+      "resourceCounts": {
+        "symbol": 40149,
+        "template": 2788,
+        "mixin": 2014,
+        "frame": 3237,
+        "cvar": 234,
+        "atlas": 2271
+      },
+      "resourceCoverage": "partial"
     },
     {
       "version": "10.0.7",
@@ -69,7 +99,17 @@
         "enumerations": 418,
         "structures": 483,
         "widgets": 48
-      }
+      },
+      "resourceFile": "resources/10.0.7.json.gz",
+      "resourceCounts": {
+        "symbol": 40162,
+        "template": 2786,
+        "mixin": 2021,
+        "frame": 3228,
+        "cvar": 234,
+        "atlas": 2261
+      },
+      "resourceCoverage": "partial"
     },
     {
       "version": "10.1.0",
@@ -86,7 +126,17 @@
         "enumerations": 439,
         "structures": 499,
         "widgets": 51
-      }
+      },
+      "resourceFile": "resources/10.1.0.json.gz",
+      "resourceCounts": {
+        "symbol": 40519,
+        "template": 2801,
+        "mixin": 2071,
+        "frame": 3084,
+        "cvar": 232,
+        "atlas": 2341
+      },
+      "resourceCoverage": "partial"
     },
     {
       "version": "10.1.5",
@@ -103,7 +153,17 @@
         "enumerations": 451,
         "structures": 501,
         "widgets": 65
-      }
+      },
+      "resourceFile": "resources/10.1.5.json.gz",
+      "resourceCounts": {
+        "symbol": 41202,
+        "template": 2836,
+        "mixin": 2124,
+        "frame": 3078,
+        "cvar": 241,
+        "atlas": 2400
+      },
+      "resourceCoverage": "partial"
     },
     {
       "version": "10.1.7",
@@ -120,7 +180,17 @@
         "enumerations": 458,
         "structures": 514,
         "widgets": 66
-      }
+      },
+      "resourceFile": "resources/10.1.7.json.gz",
+      "resourceCounts": {
+        "symbol": 41479,
+        "template": 2848,
+        "mixin": 2145,
+        "frame": 3079,
+        "cvar": 246,
+        "atlas": 2409
+      },
+      "resourceCoverage": "partial"
     },
     {
       "version": "10.2.0",
@@ -137,7 +207,17 @@
         "enumerations": 464,
         "structures": 525,
         "widgets": 66
-      }
+      },
+      "resourceFile": "resources/10.2.0.json.gz",
+      "resourceCounts": {
+        "symbol": 41730,
+        "template": 2853,
+        "mixin": 2164,
+        "frame": 3077,
+        "cvar": 249,
+        "atlas": 2431
+      },
+      "resourceCoverage": "partial"
     },
     {
       "version": "10.2.5",
@@ -154,7 +234,17 @@
         "enumerations": 470,
         "structures": 530,
         "widgets": 67
-      }
+      },
+      "resourceFile": "resources/10.2.5.json.gz",
+      "resourceCounts": {
+        "symbol": 41918,
+        "template": 2866,
+        "mixin": 2181,
+        "frame": 3067,
+        "cvar": 250,
+        "atlas": 2447
+      },
+      "resourceCoverage": "partial"
     },
     {
       "version": "10.2.6",
@@ -171,7 +261,17 @@
         "enumerations": 472,
         "structures": 538,
         "widgets": 67
-      }
+      },
+      "resourceFile": "resources/10.2.6.json.gz",
+      "resourceCounts": {
+        "symbol": 42227,
+        "template": 2877,
+        "mixin": 2203,
+        "frame": 3070,
+        "cvar": 251,
+        "atlas": 2470
+      },
+      "resourceCoverage": "partial"
     },
     {
       "version": "10.2.7",
@@ -188,7 +288,17 @@
         "enumerations": 476,
         "structures": 544,
         "widgets": 67
-      }
+      },
+      "resourceFile": "resources/10.2.7.json.gz",
+      "resourceCounts": {
+        "symbol": 37853,
+        "template": 2547,
+        "mixin": 1905,
+        "frame": 2646,
+        "cvar": 232,
+        "atlas": 2010
+      },
+      "resourceCoverage": "partial"
     },
     {
       "version": "11.0.0",
@@ -205,7 +315,17 @@
         "enumerations": 518,
         "structures": 566,
         "widgets": 69
-      }
+      },
+      "resourceFile": "resources/11.0.0.json.gz",
+      "resourceCounts": {
+        "symbol": 39498,
+        "template": 2642,
+        "mixin": 2104,
+        "frame": 2417,
+        "cvar": 242,
+        "atlas": 2145
+      },
+      "resourceCoverage": "complete"
     },
     {
       "version": "11.0.2",
@@ -222,7 +342,17 @@
         "enumerations": 523,
         "structures": 568,
         "widgets": 69
-      }
+      },
+      "resourceFile": "resources/11.0.2.json.gz",
+      "resourceCounts": {
+        "symbol": 39486,
+        "template": 2654,
+        "mixin": 2107,
+        "frame": 2364,
+        "cvar": 242,
+        "atlas": 2154
+      },
+      "resourceCoverage": "complete"
     },
     {
       "version": "11.0.5",
@@ -239,7 +369,17 @@
         "enumerations": 526,
         "structures": 572,
         "widgets": 68
-      }
+      },
+      "resourceFile": "resources/11.0.5.json.gz",
+      "resourceCounts": {
+        "symbol": 39547,
+        "template": 2653,
+        "mixin": 2106,
+        "frame": 2365,
+        "cvar": 243,
+        "atlas": 2155
+      },
+      "resourceCoverage": "complete"
     },
     {
       "version": "11.0.7",
@@ -256,7 +396,17 @@
         "enumerations": 543,
         "structures": 584,
         "widgets": 68
-      }
+      },
+      "resourceFile": "resources/11.0.7.json.gz",
+      "resourceCounts": {
+        "symbol": 39721,
+        "template": 2660,
+        "mixin": 2121,
+        "frame": 2372,
+        "cvar": 242,
+        "atlas": 2160
+      },
+      "resourceCoverage": "complete"
     },
     {
       "version": "11.1.0",
@@ -273,7 +423,17 @@
         "enumerations": 548,
         "structures": 592,
         "widgets": 68
-      }
+      },
+      "resourceFile": "resources/11.1.0.json.gz",
+      "resourceCounts": {
+        "symbol": 40176,
+        "template": 2693,
+        "mixin": 2152,
+        "frame": 2375,
+        "cvar": 248,
+        "atlas": 2177
+      },
+      "resourceCoverage": "complete"
     },
     {
       "version": "11.1.5",
@@ -290,7 +450,17 @@
         "enumerations": 563,
         "structures": 606,
         "widgets": 69
-      }
+      },
+      "resourceFile": "resources/11.1.5.json.gz",
+      "resourceCounts": {
+        "symbol": 45761,
+        "template": 3050,
+        "mixin": 2551,
+        "frame": 2728,
+        "cvar": 271,
+        "atlas": 2669
+      },
+      "resourceCoverage": "complete"
     },
     {
       "version": "11.1.7",
@@ -307,7 +477,17 @@
         "enumerations": 568,
         "structures": 610,
         "widgets": 69
-      }
+      },
+      "resourceFile": "resources/11.1.7.json.gz",
+      "resourceCounts": {
+        "symbol": 45923,
+        "template": 3059,
+        "mixin": 2561,
+        "frame": 2725,
+        "cvar": 273,
+        "atlas": 2681
+      },
+      "resourceCoverage": "complete"
     },
     {
       "version": "11.2.0",
@@ -324,7 +504,17 @@
         "enumerations": 583,
         "structures": 624,
         "widgets": 69
-      }
+      },
+      "resourceFile": "resources/11.2.0.json.gz",
+      "resourceCounts": {
+        "symbol": 46190,
+        "template": 3095,
+        "mixin": 2583,
+        "frame": 2652,
+        "cvar": 270,
+        "atlas": 2681
+      },
+      "resourceCoverage": "complete"
     },
     {
       "version": "11.2.5",
@@ -341,7 +531,17 @@
         "enumerations": 598,
         "structures": 647,
         "widgets": 69
-      }
+      },
+      "resourceFile": "resources/11.2.5.json.gz",
+      "resourceCounts": {
+        "symbol": 47339,
+        "template": 3168,
+        "mixin": 2693,
+        "frame": 2637,
+        "cvar": 271,
+        "atlas": 2731
+      },
+      "resourceCoverage": "complete"
     },
     {
       "version": "11.2.7",
@@ -358,7 +558,17 @@
         "enumerations": 666,
         "structures": 694,
         "widgets": 72
-      }
+      },
+      "resourceFile": "resources/11.2.7.json.gz",
+      "resourceCounts": {
+        "symbol": 49871,
+        "template": 3307,
+        "mixin": 2893,
+        "frame": 2669,
+        "cvar": 275,
+        "atlas": 2922
+      },
+      "resourceCoverage": "complete"
     },
     {
       "version": "12.0.0",
@@ -375,7 +585,17 @@
         "enumerations": 793,
         "structures": 766,
         "widgets": 79
-      }
+      },
+      "resourceFile": "resources/12.0.0.json.gz",
+      "resourceCounts": {
+        "symbol": 53194,
+        "template": 3419,
+        "mixin": 3021,
+        "frame": 2648,
+        "cvar": 273,
+        "atlas": 3108
+      },
+      "resourceCoverage": "complete"
     },
     {
       "version": "12.0.1",
@@ -392,7 +612,17 @@
         "enumerations": 812,
         "structures": 769,
         "widgets": 80
-      }
+      },
+      "resourceFile": "resources/12.0.1.json.gz",
+      "resourceCounts": {
+        "symbol": 54011,
+        "template": 3433,
+        "mixin": 3057,
+        "frame": 2657,
+        "cvar": 278,
+        "atlas": 3116
+      },
+      "resourceCoverage": "complete"
     },
     {
       "version": "12.0.5",
@@ -409,7 +639,17 @@
         "enumerations": 825,
         "structures": 786,
         "widgets": 84
-      }
+      },
+      "resourceFile": "resources/12.0.5.json.gz",
+      "resourceCounts": {
+        "symbol": 54453,
+        "template": 3453,
+        "mixin": 3098,
+        "frame": 2622,
+        "cvar": 278,
+        "atlas": 3151
+      },
+      "resourceCoverage": "complete"
     },
     {
       "version": "12.0.7",
@@ -426,7 +666,17 @@
         "enumerations": 795,
         "structures": 790,
         "widgets": 87
-      }
+      },
+      "resourceFile": "resources/12.0.7.json.gz",
+      "resourceCounts": {
+        "symbol": 54772,
+        "template": 3460,
+        "mixin": 3110,
+        "frame": 2622,
+        "cvar": 277,
+        "atlas": 3160
+      },
+      "resourceCoverage": "complete"
     },
     {
       "version": "12.1.0",
@@ -444,6 +694,7 @@
         "structures": 832,
         "widgets": 91
       },
+      "resourceFile": "resources/12.1.0.json.gz",
       "resourceCounts": {
         "symbol": 57880,
         "template": 3576,
@@ -451,7 +702,8 @@
         "frame": 2635,
         "cvar": 277,
         "atlas": 3193
-      }
+      },
+      "resourceCoverage": "complete"
     }
   ]
 }
