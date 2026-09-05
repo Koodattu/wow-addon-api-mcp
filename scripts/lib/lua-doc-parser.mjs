@@ -35,7 +35,7 @@ function decodeLuaString(raw) {
   return result;
 }
 
-function memberName(node) {
+export function memberName(node) {
   if (!node) return null;
   if (node.type === 'Identifier') return node.name;
   if (node.type === 'MemberExpression') {
@@ -125,6 +125,17 @@ function parse(source, filename) {
       luaVersion: '5.1',
       ranges: false,
       scope: false,
+    });
+  } catch (error) {
+    error.message = `${filename}: ${error.message}`;
+    throw error;
+  }
+}
+
+export function parseLuaSource(source, filename = '<source>') {
+  try {
+    return luaparse.parse(source.replace(/^\uFEFF/, ''), {
+      comments: false, locations: true, scope: true, luaVersion: '5.2',
     });
   } catch (error) {
     error.message = `${filename}: ${error.message}`;

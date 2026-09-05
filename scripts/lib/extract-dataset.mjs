@@ -3,6 +3,7 @@ import path from 'node:path';
 
 import { parseLuaDocumentationSource, parseLuaMixinsSource } from './lua-doc-parser.mjs';
 import { publicWidgetName, widgetParents } from './widget-names.mjs';
+import { extractFrameXmlResources, parseAttributes } from './framexml-resources.mjs';
 
 function toPosix(relativePath) {
   return relativePath.split(path.sep).join('/');
@@ -78,10 +79,6 @@ function normalizeTable(raw, context) {
     metadata: metadataOf(raw, TABLE_OMITTED),
     sourceFile: context.sourceFile,
   };
-}
-
-function parseAttributes(source) {
-  return Object.fromEntries([...source.matchAll(/([\w:.-]+)="([^"]*)"/g)].map((match) => [match[1], match[2]]));
 }
 
 async function extractIntrinsicWidgets(interfaceRoot, sourceRoot) {
@@ -298,6 +295,7 @@ export async function extractDataset(sourceRoot, source) {
   return {
     schemaVersion: 1,
     source,
+    resources: await extractFrameXmlResources(sourceRoot, await walkFiles(path.join(sourceRoot, 'Interface'), '.toc')),
     stats: {
       systems: normalizedSystems.length,
       functions: normalizedFunctions.filter((entry) => entry.kind === 'function').length,

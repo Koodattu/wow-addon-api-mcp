@@ -105,6 +105,7 @@ async function main() {
     commitDate,
     file: relativeFile,
     stats: dataset.stats,
+    resourceCounts: dataset.resources.counts,
   });
 
   console.log(JSON.stringify({ output, manifest: manifestPath, default: manifest.default, bytes: compressed.length, source: dataset.source, stats: dataset.stats }, null, 2));

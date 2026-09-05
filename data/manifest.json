@@ -443,6 +443,14 @@
         "enumerations": 844,
         "structures": 832,
         "widgets": 91
+      },
+      "resourceCounts": {
+        "symbol": 57880,
+        "template": 3576,
+        "mixin": 3320,
+        "frame": 2635,
+        "cvar": 277,
+        "atlas": 3193
       }
     }
   ]

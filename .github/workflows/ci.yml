@@ -24,5 +24,37 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm test
+      - name: Resolve pinned Blizzard source
+        if: matrix.node == 24
+        id: source
+        run: node -e "const m=require('./data/manifest.json');console.log('commit='+m.versions.find(v=>v.version===m.default).commit)" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@v7
+        if: matrix.node == 24
+        with:
+          repository: Gethe/wow-ui-source
+          ref: ${{ steps.source.outputs.commit }}
+          path: .cache/wow-ui-source
+      - name: Verify deterministic dataset extraction
+        if: matrix.node == 24
+        run: |
+          npm run data:build
+          node --input-type=module <<'NODE'
+          import { execFileSync } from 'node:child_process';
+          import { readFileSync } from 'node:fs';
+          import { gunzipSync } from 'node:zlib';
+          const m = JSON.parse(readFileSync('data/manifest.json', 'utf8'));
+          const file = 'data/' + m.versions.find(v => v.version === m.default).file;
+          const before = execFileSync('git', ['show', 'HEAD:' + file], { maxBuffer: 50 * 1024 * 1024 });
+          const after = readFileSync(file);
+          if (!before.equals(after)) {
+            const left = gunzipSync(before).toString();
+            const right = gunzipSync(after).toString();
+            let at = 0;
+            while (at < Math.min(left.length, right.length) && left[at] === right[at]) at++;
+            console.error({ node: process.version, zlib: process.versions.zlib, sameContent: left === right,
+              firstDifference: at, before: left.slice(at - 100, at + 200), after: right.slice(at - 100, at + 200) });
+          }
+          NODE
+          git diff --exit-code -- data/manifest.json data/retail
       - if: matrix.node == 24
         run: npm run pack:check

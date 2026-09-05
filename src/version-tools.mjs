@@ -30,8 +30,8 @@ export async function compareApi(catalog, name, fromVersion, toVersion, kind) {
   const from = catalog.entry(fromVersion);
   const to = catalog.entry(toVersion);
   const [fromStore, toStore] = await Promise.all([catalog.store(from.version), catalog.store(to.version)]);
-  const before = new Map(fromStore.lookup(name, kind).map((match) => [`${match.entryKind}\0${entryIdentity(match.entryKind, match.entry)}`, match]));
-  const after = new Map(toStore.lookup(name, kind).map((match) => [`${match.entryKind}\0${entryIdentity(match.entryKind, match.entry)}`, match]));
+  const before = new Map(fromStore.lookup(name, kind, { allowShortNames: false }).map((match) => [`${match.entryKind}\0${entryIdentity(match.entryKind, match.entry)}`, match]));
+  const after = new Map(toStore.lookup(name, kind, { allowShortNames: false }).map((match) => [`${match.entryKind}\0${entryIdentity(match.entryKind, match.entry)}`, match]));
   const keys = [...new Set([...before.keys(), ...after.keys()])].sort();
   return {
     from,
@@ -82,7 +82,7 @@ export async function apiHistory(catalog, name, { kind, fromVersion, toVersion }
 
   for (const version of versions) {
     const store = await catalog.store(version.version);
-    const matches = store.lookup(name, kind);
+    const matches = store.lookup(name, kind, { allowShortNames: false });
     const current = matches.map((match) => ({
       entryKind: match.entryKind,
       identity: entryIdentity(match.entryKind, match.entry),

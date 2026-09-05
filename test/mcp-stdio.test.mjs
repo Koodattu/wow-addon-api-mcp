@@ -27,6 +27,8 @@ test('serves the bundled docs over MCP stdio', { timeout: 20_000 }, async () => 
     assert.ok(tools.tools.some((tool) => tool.name === 'compare_api'));
     assert.ok(tools.tools.some((tool) => tool.name === 'diff_versions'));
     assert.ok(tools.tools.some((tool) => tool.name === 'get_api_history'));
+    assert.ok(tools.tools.some((tool) => tool.name === 'lookup_resource'));
+    assert.ok(tools.tools.some((tool) => tool.name === 'search_resources'));
 
     const result = await client.callTool({
       name: 'lookup_api',
@@ -52,6 +54,18 @@ test('serves the bundled docs over MCP stdio', { timeout: 20_000 }, async () => 
     });
     const comparisonText = comparison.content.find((item) => item.type === 'text').text;
     assert.match(comparisonText, /Status: added/);
+
+    const resource = await client.callTool({ name: 'lookup_resource', arguments: { query: 'BackdropTemplate', kind: 'template' } });
+    const resourceText = resource.content.find((item) => item.type === 'text').text;
+    assert.match(resourceText, /BackdropTemplateMixin/);
+    assert.match(resourceText, /framexml-declaration/);
+    assert.ok(resourceText.includes(`/blob/${current.commit}/`));
+    const oldResource = await client.callTool({ name: 'lookup_resource', arguments: { query: 'BackdropTemplate', version: '10.0.0' } });
+    if (manifest.versions.find((entry) => entry.version === '10.0.0').resourceCounts) {
+      assert.match(oldResource.content[0].text, /Blizzard source inventory/);
+    } else {
+      assert.match(oldResource.content[0].text, /not collected/);
+    }
   } finally {
     await client.close();
   }

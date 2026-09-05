@@ -53,7 +53,7 @@ export class WowApiStore {
       .slice(0, Math.min(Math.max(limit, 1), 50));
   }
 
-  lookup(name, kind) {
+  lookup(name, kind, { allowShortNames = true } = {}) {
     const needle = normalized(name.trim());
     const needles = new Set([needle]);
     if (needle.startsWith('enum.')) needles.add(needle.slice(5));
@@ -67,14 +67,34 @@ export class WowApiStore {
       ].filter(Boolean).some((value) => needles.has(normalized(value))))
       .map((entry) => ({ entryKind, entry })));
 
-    if (matches.length === 0 && (!kind || kind === 'function') && name.includes(':')) {
+    const exact = matches.filter(({ entryKind, entry }) => needles.has(normalized(entry.fullName ?? entry.literalName ?? entry.name))
+      || (entryKind === 'system' && entry.namespace && needles.has(normalized(entry.namespace))));
+    if (exact.length) return exact;
+    if ((!allowShortNames || matches.length === 0) && (!kind || kind === 'function') && name.includes(':')) {
       const separator = name.indexOf(':');
       const widget = this.widget(name.slice(0, separator));
       const methodName = normalized(name.slice(separator + 1));
       const method = widget?.methods.find((entry) => normalized(entry.name) === methodName);
-      if (method) matches.push({ entryKind: 'function', entry: method });
+      if (method) return [{ entryKind: 'function', entry: method }];
     }
-    return matches;
+    return allowShortNames ? matches.map((match) => ({ ...match, matchType: 'short-name' })) : [];
+  }
+
+  resources(query, { kind, exact = false, limit = 20, offset = 0 } = {}) {
+    const resources = this.dataset.resources;
+    if (!resources) return { available: false, total: 0, entries: [] };
+    const needle = normalized(query.trim());
+    const matches = resources.entries
+      .filter((entry) => (!kind || entry.kind === kind) && (exact
+        ? normalized(entry.name) === needle : normalized(entry.name).includes(needle)))
+      .sort((a, b) => score(a, needle) - score(b, needle)
+        || Number(a.sourceKind === 'framexml-reference') - Number(b.sourceKind === 'framexml-reference')
+        || a.name.localeCompare(b.name) || a.sourceFile.localeCompare(b.sourceFile) || a.sourceLine - b.sourceLine);
+    return {
+      available: true, scope: resources.scope, total: matches.length, offset,
+      nextOffset: offset + limit < matches.length ? offset + limit : null,
+      entries: matches.slice(offset, offset + limit),
+    };
   }
 
   namespace(namespace) {
