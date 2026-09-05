@@ -1,6 +1,6 @@
 {
   "name": "wow-addon-api-mcp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Versioned, standalone MCP server for the World of Warcraft AddOn API",
   "type": "module",
   "bin": {

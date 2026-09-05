@@ -1,0 +1,2639 @@
+{
+  "retainedPatches": [
+    "10.0.0",
+    "10.0.2",
+    "10.0.5",
+    "10.0.7",
+    "10.1.0",
+    "10.1.5",
+    "10.1.7",
+    "10.2.0",
+    "10.2.5",
+    "10.2.6",
+    "10.2.7",
+    "11.0.0",
+    "11.0.2",
+    "11.0.5",
+    "11.0.7",
+    "11.1.0",
+    "11.1.5",
+    "11.1.7",
+    "11.2.0",
+    "11.2.5",
+    "11.2.7",
+    "12.0.0",
+    "12.0.1",
+    "12.0.5",
+    "12.0.7",
+    "12.1.0"
+  ],
+  "datasets": [
+    {
+      "schemaVersion": 1,
+      "source": {
+        "repository": "https://github.com/Gethe/wow-ui-source",
+        "branch": "live",
+        "version": "12.0.7.68974",
+        "patch": "12.0.7",
+        "build": "68974",
+        "commit": "c878310d8432a65bac029c7bacc24eeb2e662bbe",
+        "commitDate": "2026-08-03T23:01:08Z"
+      },
+      "stats": {
+        "systems": 592,
+        "functions": 4760,
+        "methods": 1384,
+        "events": 1741,
+        "enumerations": 795,
+        "structures": 790,
+        "widgets": 87
+      },
+      "systems": [
+        {
+          "name": "UnitAuras",
+          "kind": "System",
+          "namespace": "C_UnitAuras",
+          "documentation": [],
+          "metadata": {
+            "Environment": "All",
+            "Predicates": [
+              {
+                "Name": "RequiresNonSecretAura",
+                "Type": "Precondition"
+              }
+            ]
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua"
+        }
+      ],
+      "functions": [
+        {
+          "name": "AddBlockedAura",
+          "fullName": "C_UnitAuras.AddBlockedAura",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "unit",
+              "Type": "UnitTokenRestrictedForAddOns",
+              "Nilable": false
+            },
+            {
+              "Name": "auraInstanceID",
+              "Type": "number",
+              "Nilable": false
+            }
+          ],
+          "returns": [],
+          "metadata": {
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "AddPrivateAuraAnchor",
+          "fullName": "C_UnitAuras.AddPrivateAuraAnchor",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "args",
+              "Type": "AddPrivateAuraAnchorArgs",
+              "Nilable": false
+            }
+          ],
+          "returns": [
+            {
+              "Name": "anchorID",
+              "Type": "number",
+              "Nilable": true
+            }
+          ],
+          "metadata": {
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "AddPrivateAuraAppliedSound",
+          "fullName": "C_UnitAuras.AddPrivateAuraAppliedSound",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "sound",
+              "Type": "UnitPrivateAuraAppliedSoundInfo",
+              "Nilable": false
+            }
+          ],
+          "returns": [
+            {
+              "Name": "privateAuraSoundID",
+              "Type": "number",
+              "Nilable": true
+            }
+          ],
+          "metadata": {
+            "HasRestrictions": true,
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "AuraIsBigDefensive",
+          "fullName": "C_UnitAuras.AuraIsBigDefensive",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "spellID",
+              "Type": "SpellIdentifier",
+              "Nilable": false
+            }
+          ],
+          "returns": [
+            {
+              "Name": "isBigDefensive",
+              "Type": "bool",
+              "Nilable": false
+            }
+          ],
+          "metadata": {
+            "SecretArguments": "AllowedWhenTainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "AuraIsPrivate",
+          "fullName": "C_UnitAuras.AuraIsPrivate",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "spellID",
+              "Type": "SpellIdentifier",
+              "Nilable": false
+            }
+          ],
+          "returns": [
+            {
+              "Name": "isPrivate",
+              "Type": "bool",
+              "Nilable": false
+            }
+          ],
+          "metadata": {
+            "SecretArguments": "AllowedWhenTainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "ClearBlockedAuras",
+          "fullName": "C_UnitAuras.ClearBlockedAuras",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "unit",
+              "Type": "UnitTokenRestrictedForAddOns",
+              "Nilable": false
+            }
+          ],
+          "returns": [],
+          "metadata": {
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "DoesAuraHaveExpirationTime",
+          "fullName": "C_UnitAuras.DoesAuraHaveExpirationTime",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [
+            "Returns true if an aura instance will expire after a certain amount of time."
+          ],
+          "arguments": [
+            {
+              "Name": "auraInstanceUnit",
+              "Type": "UnitToken",
+              "Nilable": false
+            },
+            {
+              "Name": "auraInstanceID",
+              "Type": "number",
+              "Nilable": false
+            }
+          ],
+          "returns": [
+            {
+              "Name": "hasExpirationTime",
+              "Type": "bool",
+              "Nilable": false
+            }
+          ],
+          "metadata": {
+            "RequiresValidUnitAuraInstance": true,
+            "SecretWhenUnitAuraRestricted": true,
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "GetAuraApplicationDisplayCount",
+          "fullName": "C_UnitAuras.GetAuraApplicationDisplayCount",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [
+            "Formats a string for displaying the number of applications an aura has present."
+          ],
+          "arguments": [
+            {
+              "Name": "auraInstanceUnit",
+              "Type": "UnitToken",
+              "Nilable": false
+            },
+            {
+              "Name": "auraInstanceID",
+              "Type": "number",
+              "Nilable": false
+            },
+            {
+              "Name": "minDisplayCount",
+              "Type": "number",
+              "Nilable": false,
+              "NeverSecret": true,
+              "Default": 2,
+              "Documentation": [
+                "Minimum number of applications required; if the application count is below this figure an empty string will be returned."
+              ]
+            },
+            {
+              "Name": "maxDisplayCount",
+              "Type": "number",
+              "Nilable": true,
+              "NeverSecret": true,
+              "Documentation": [
+                "Maximum number of applications allowed; if the application count is above this figure then the string '*' will be returned."
+              ]
+            }
+          ],
+          "returns": [
+            {
+              "Name": "count",
+              "Type": "string",
+              "Nilable": false
+            }
+          ],
+          "metadata": {
+            "RequiresValidUnitAuraInstance": true,
+            "SecretWhenUnitAuraRestricted": true,
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "GetAuraBaseDuration",
+          "fullName": "C_UnitAuras.GetAuraBaseDuration",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [
+            "Returns the base duration of the given spell (or aura). Takes an optional spellID to use as the new duration if that cannot be derived from the aura, if that value isn't supplied the aura's spellID will be used"
+          ],
+          "arguments": [
+            {
+              "Name": "auraInstanceUnit",
+              "Type": "UnitToken",
+              "Nilable": false
+            },
+            {
+              "Name": "auraInstanceID",
+              "Type": "number",
+              "Nilable": false
+            },
+            {
+              "Name": "spellID",
+              "Type": "SpellIdentifier",
+              "Nilable": true
+            }
+          ],
+          "returns": [
+            {
+              "Name": "newDuration",
+              "Type": "number",
+              "Nilable": true
+            }
+          ],
+          "metadata": {
+            "RequiresValidUnitAuraInstance": true,
+            "SecretWhenUnitAuraRestricted": true,
+            "SecretArguments": "AllowedWhenTainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "GetAuraDataByAuraInstanceID",
+          "fullName": "C_UnitAuras.GetAuraDataByAuraInstanceID",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "unit",
+              "Type": "UnitTokenRestrictedForAddOns",
+              "Nilable": false,
+              "NeverSecret": true
+            },
+            {
+              "Name": "auraInstanceID",
+              "Type": "number",
+              "Nilable": false
+            }
+          ],
+          "returns": [
+            {
+              "Name": "aura",
+              "Type": "AuraData",
+              "Nilable": true
+            }
+          ],
+          "metadata": {
+            "SecretWhenUnitAuraRestricted": true,
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "GetAuraDataByIndex",
+          "fullName": "C_UnitAuras.GetAuraDataByIndex",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "unit",
+              "Type": "UnitTokenRestrictedForAddOns",
+              "Nilable": false
+            },
+            {
+              "Name": "index",
+              "Type": "luaIndex",
+              "Nilable": false
+            },
+            {
+              "Name": "filter",
+              "Type": "AuraFilters",
+              "Nilable": true
+            }
+          ],
+          "returns": [
+            {
+              "Name": "aura",
+              "Type": "AuraData",
+              "Nilable": true
+            }
+          ],
+          "metadata": {
+            "SecretWhenUnitAuraRestricted": true,
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "GetAuraDataBySlot",
+          "fullName": "C_UnitAuras.GetAuraDataBySlot",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "unit",
+              "Type": "UnitTokenRestrictedForAddOns",
+              "Nilable": false,
+              "NeverSecret": true
+            },
+            {
+              "Name": "slot",
+              "Type": "number",
+              "Nilable": false
+            }
+          ],
+          "returns": [
+            {
+              "Name": "aura",
+              "Type": "AuraData",
+              "Nilable": true
+            }
+          ],
+          "metadata": {
+            "SecretWhenUnitAuraRestricted": true,
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "GetAuraDataBySpellName",
+          "fullName": "C_UnitAuras.GetAuraDataBySpellName",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "unit",
+              "Type": "UnitTokenRestrictedForAddOns",
+              "Nilable": false,
+              "NeverSecret": true
+            },
+            {
+              "Name": "spellName",
+              "Type": "cstring",
+              "Nilable": false
+            },
+            {
+              "Name": "filter",
+              "Type": "AuraFilters",
+              "Nilable": true
+            }
+          ],
+          "returns": [
+            {
+              "Name": "aura",
+              "Type": "AuraData",
+              "Nilable": true
+            }
+          ],
+          "metadata": {
+            "SecretWhenUnitAuraRestricted": true,
+            "RequiresNonSecretAura": true,
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "GetAuraDispelTypeColor",
+          "fullName": "C_UnitAuras.GetAuraDispelTypeColor",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [
+            "Queries the dispel type associated with an aura instance and remaps it to a color via a curve, with the dispel type ID used as the 'x' value."
+          ],
+          "arguments": [
+            {
+              "Name": "auraInstanceUnit",
+              "Type": "UnitToken",
+              "Nilable": false
+            },
+            {
+              "Name": "auraInstanceID",
+              "Type": "number",
+              "Nilable": false
+            },
+            {
+              "Name": "curve",
+              "Type": "LuaColorCurveObject",
+              "Nilable": false
+            }
+          ],
+          "returns": [
+            {
+              "Name": "dispelTypeColor",
+              "Type": "colorRGBA",
+              "Mixin": "ColorMixin",
+              "Nilable": false
+            }
+          ],
+          "metadata": {
+            "RequiresValidUnitAuraInstance": true,
+            "SecretWhenUnitAuraRestricted": true,
+            "SecretWhenCurveSecret": true,
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "GetAuraDuration",
+          "fullName": "C_UnitAuras.GetAuraDuration",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "auraInstanceUnit",
+              "Type": "UnitToken",
+              "Nilable": false
+            },
+            {
+              "Name": "auraInstanceID",
+              "Type": "number",
+              "Nilable": false
+            }
+          ],
+          "returns": [
+            {
+              "Name": "duration",
+              "Type": "LuaDurationObject",
+              "Nilable": false
+            }
+          ],
+          "metadata": {
+            "RequiresValidUnitAuraInstance": true,
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "GetAuraSlots",
+          "fullName": "C_UnitAuras.GetAuraSlots",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "unit",
+              "Type": "UnitTokenRestrictedForAddOns",
+              "Nilable": false
+            },
+            {
+              "Name": "filter",
+              "Type": "AuraFilters",
+              "Nilable": true
+            },
+            {
+              "Name": "maxSlots",
+              "Type": "number",
+              "Nilable": true
+            },
+            {
+              "Name": "continuationToken",
+              "Type": "number",
+              "Nilable": true
+            }
+          ],
+          "returns": [
+            {
+              "Name": "outContinuationToken",
+              "Type": "number",
+              "Nilable": true
+            },
+            {
+              "Name": "slots",
+              "Type": "number",
+              "Nilable": false,
+              "StrideIndex": 1
+            }
+          ],
+          "metadata": {
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "GetBuffDataByIndex",
+          "fullName": "C_UnitAuras.GetBuffDataByIndex",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "unit",
+              "Type": "UnitTokenRestrictedForAddOns",
+              "Nilable": false
+            },
+            {
+              "Name": "index",
+              "Type": "luaIndex",
+              "Nilable": false
+            },
+            {
+              "Name": "filter",
+              "Type": "AuraFilters",
+              "Nilable": true
+            }
+          ],
+          "returns": [
+            {
+              "Name": "aura",
+              "Type": "AuraData",
+              "Nilable": true
+            }
+          ],
+          "metadata": {
+            "SecretWhenUnitAuraRestricted": true,
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "GetCooldownAuraBySpellID",
+          "fullName": "C_UnitAuras.GetCooldownAuraBySpellID",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "spellID",
+              "Type": "SpellIdentifier",
+              "Nilable": false
+            }
+          ],
+          "returns": [
+            {
+              "Name": "cooldownSpellID",
+              "Type": "number",
+              "Nilable": true
+            }
+          ],
+          "metadata": {
+            "SecretArguments": "AllowedWhenTainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "GetDebuffDataByIndex",
+          "fullName": "C_UnitAuras.GetDebuffDataByIndex",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "unit",
+              "Type": "UnitTokenRestrictedForAddOns",
+              "Nilable": false
+            },
+            {
+              "Name": "index",
+              "Type": "luaIndex",
+              "Nilable": false
+            },
+            {
+              "Name": "filter",
+              "Type": "AuraFilters",
+              "Nilable": true
+            }
+          ],
+          "returns": [
+            {
+              "Name": "aura",
+              "Type": "AuraData",
+              "Nilable": true
+            }
+          ],
+          "metadata": {
+            "SecretWhenUnitAuraRestricted": true,
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "GetPlayerAuraBySpellID",
+          "fullName": "C_UnitAuras.GetPlayerAuraBySpellID",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "spellID",
+              "Type": "SpellIdentifier",
+              "Nilable": false
+            }
+          ],
+          "returns": [
+            {
+              "Name": "aura",
+              "Type": "AuraData",
+              "Nilable": true
+            }
+          ],
+          "metadata": {
+            "SecretWhenUnitAuraRestricted": true,
+            "RequiresNonSecretAura": true,
+            "SecretArguments": "AllowedWhenTainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "GetRefreshExtendedDuration",
+          "fullName": "C_UnitAuras.GetRefreshExtendedDuration",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [
+            "Returns the client-predicted new duration of this aura if it were cast again right now. Takes an optional spellID to use as the new duration if that cannot be derived from the aura, if that value isn't supplied the aura's spellID will be used"
+          ],
+          "arguments": [
+            {
+              "Name": "auraInstanceUnit",
+              "Type": "UnitToken",
+              "Nilable": false
+            },
+            {
+              "Name": "auraInstanceID",
+              "Type": "number",
+              "Nilable": false
+            },
+            {
+              "Name": "spellID",
+              "Type": "SpellIdentifier",
+              "Nilable": true
+            }
+          ],
+          "returns": [
+            {
+              "Name": "newDuration",
+              "Type": "number",
+              "Nilable": true
+            }
+          ],
+          "metadata": {
+            "RequiresValidUnitAuraInstance": true,
+            "SecretWhenUnitAuraRestricted": true,
+            "SecretArguments": "AllowedWhenTainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "GetUnitAuraBySpellID",
+          "fullName": "C_UnitAuras.GetUnitAuraBySpellID",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [
+            "Returns the first instance of an aura on a unit matching a given spell ID. Returns nil if no such aura is found. Additionally can return nil if querying a unit that is not visible (eg. party members on other maps)."
+          ],
+          "arguments": [
+            {
+              "Name": "unit",
+              "Type": "UnitTokenRestrictedForAddOns",
+              "Nilable": false,
+              "NeverSecret": true
+            },
+            {
+              "Name": "spellID",
+              "Type": "SpellIdentifier",
+              "Nilable": false
+            }
+          ],
+          "returns": [
+            {
+              "Name": "aura",
+              "Type": "AuraData",
+              "Nilable": true
+            }
+          ],
+          "metadata": {
+            "SecretWhenUnitAuraRestricted": true,
+            "RequiresNonSecretAura": true,
+            "SecretArguments": "AllowedWhenTainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "GetUnitAuraInstanceIDs",
+          "fullName": "C_UnitAuras.GetUnitAuraInstanceIDs",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "unit",
+              "Type": "UnitTokenRestrictedForAddOns",
+              "Nilable": false,
+              "NeverSecret": true
+            },
+            {
+              "Name": "filter",
+              "Type": "AuraFilters",
+              "Nilable": false
+            },
+            {
+              "Name": "maxCount",
+              "Type": "number",
+              "Nilable": true
+            },
+            {
+              "Name": "sortRule",
+              "Type": "UnitAuraSortRule",
+              "Nilable": false,
+              "Default": "Unsorted"
+            },
+            {
+              "Name": "sortDirection",
+              "Type": "UnitAuraSortDirection",
+              "Nilable": false,
+              "Default": "Normal"
+            }
+          ],
+          "returns": [
+            {
+              "Name": "auraInstanceIDs",
+              "Type": "table",
+              "InnerType": "number",
+              "Nilable": false
+            }
+          ],
+          "metadata": {
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "GetUnitAuras",
+          "fullName": "C_UnitAuras.GetUnitAuras",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "unit",
+              "Type": "UnitTokenRestrictedForAddOns",
+              "Nilable": false,
+              "NeverSecret": true
+            },
+            {
+              "Name": "filter",
+              "Type": "AuraFilters",
+              "Nilable": false
+            },
+            {
+              "Name": "maxCount",
+              "Type": "number",
+              "Nilable": true
+            },
+            {
+              "Name": "sortRule",
+              "Type": "UnitAuraSortRule",
+              "Nilable": false,
+              "Default": "Unsorted"
+            },
+            {
+              "Name": "sortDirection",
+              "Type": "UnitAuraSortDirection",
+              "Nilable": false,
+              "Default": "Normal"
+            }
+          ],
+          "returns": [
+            {
+              "Name": "auras",
+              "Type": "table",
+              "InnerType": "AuraData",
+              "Nilable": false,
+              "ConditionalSecretContents": true
+            }
+          ],
+          "metadata": {
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "IsAuraFilteredOutByInstanceID",
+          "fullName": "C_UnitAuras.IsAuraFilteredOutByInstanceID",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "unit",
+              "Type": "UnitTokenRestrictedForAddOns",
+              "Nilable": false
+            },
+            {
+              "Name": "auraInstanceID",
+              "Type": "number",
+              "Nilable": false
+            },
+            {
+              "Name": "filter",
+              "Type": "AuraFilters",
+              "Nilable": false
+            }
+          ],
+          "returns": [
+            {
+              "Name": "isFiltered",
+              "Type": "bool",
+              "Nilable": false
+            }
+          ],
+          "metadata": {
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "RemovePrivateAuraAnchor",
+          "fullName": "C_UnitAuras.RemovePrivateAuraAnchor",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "anchorID",
+              "Type": "number",
+              "Nilable": false
+            }
+          ],
+          "returns": [],
+          "metadata": {
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "RemovePrivateAuraAppliedSound",
+          "fullName": "C_UnitAuras.RemovePrivateAuraAppliedSound",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "privateAuraSoundID",
+              "Type": "number",
+              "Nilable": false
+            }
+          ],
+          "returns": [],
+          "metadata": {
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "ResetAuraDataProvider",
+          "fullName": "C_UnitAuras.ResetAuraDataProvider",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [],
+          "returns": [],
+          "metadata": {},
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "SetPrivateWarningTextAnchor",
+          "fullName": "C_UnitAuras.SetPrivateWarningTextAnchor",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "parent",
+              "Type": "SimpleFrame",
+              "Nilable": false
+            },
+            {
+              "Name": "anchor",
+              "Type": "AnchorBinding",
+              "Nilable": true
+            }
+          ],
+          "returns": [],
+          "metadata": {
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "SwitchAuraDataProvider",
+          "fullName": "C_UnitAuras.SwitchAuraDataProvider",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [],
+          "returns": [],
+          "metadata": {},
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "TriggerPrivateAuraShowDispelType",
+          "fullName": "C_UnitAuras.TriggerPrivateAuraShowDispelType",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "show",
+              "Type": "bool",
+              "Nilable": false
+            }
+          ],
+          "returns": [],
+          "metadata": {
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "WantsAlteredForm",
+          "fullName": "C_UnitAuras.WantsAlteredForm",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "unit",
+              "Type": "UnitToken",
+              "Nilable": false
+            }
+          ],
+          "returns": [
+            {
+              "Name": "wantsAlteredForm",
+              "Type": "bool",
+              "Nilable": false
+            }
+          ],
+          "metadata": {
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        }
+      ],
+      "events": [
+        {
+          "name": "AuraDataProviderSwitch",
+          "literalName": "AURA_DATA_PROVIDER_SWITCH",
+          "namespace": "C_UnitAuras",
+          "documentation": [],
+          "payload": [
+            {
+              "Name": "useRealDataProvider",
+              "Type": "bool",
+              "Nilable": false
+            }
+          ],
+          "metadata": {
+            "SynchronousEvent": true
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua"
+        },
+        {
+          "name": "UnitAura",
+          "literalName": "UNIT_AURA",
+          "namespace": "C_UnitAuras",
+          "documentation": [],
+          "payload": [
+            {
+              "Name": "unitTarget",
+              "Type": "UnitTokenVariant",
+              "Nilable": false
+            },
+            {
+              "Name": "updateInfo",
+              "Type": "UnitAuraUpdateInfo",
+              "Nilable": false
+            }
+          ],
+          "metadata": {
+            "SynchronousEvent": true
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua"
+        },
+        {
+          "name": "UnitAuraBlockListCleared",
+          "literalName": "UNIT_AURA_BLOCK_LIST_CLEARED",
+          "namespace": "C_UnitAuras",
+          "documentation": [],
+          "payload": [
+            {
+              "Name": "unitTarget",
+              "Type": "UnitTokenVariant",
+              "Nilable": false
+            }
+          ],
+          "metadata": {
+            "SynchronousEvent": true
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua"
+        },
+        {
+          "name": "UnitAuraBlocked",
+          "literalName": "UNIT_AURA_BLOCKED",
+          "namespace": "C_UnitAuras",
+          "documentation": [],
+          "payload": [
+            {
+              "Name": "unitTarget",
+              "Type": "UnitTokenVariant",
+              "Nilable": false
+            },
+            {
+              "Name": "auraInstanceID",
+              "Type": "number",
+              "Nilable": false
+            }
+          ],
+          "metadata": {
+            "SynchronousEvent": true
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua"
+        }
+      ],
+      "enumerations": [],
+      "structures": [],
+      "widgets": []
+    },
+    {
+      "schemaVersion": 1,
+      "source": {
+        "repository": "https://github.com/Gethe/wow-ui-source",
+        "branch": "live",
+        "version": "12.1.0.69283",
+        "patch": "12.1.0",
+        "build": "69283",
+        "commit": "710f59e457317676c0f699e6addaf2c405c2a1a4",
+        "commitDate": "2026-08-13T01:46:01Z"
+      },
+      "stats": {
+        "systems": 612,
+        "functions": 4898,
+        "methods": 1448,
+        "events": 1782,
+        "enumerations": 844,
+        "structures": 832,
+        "widgets": 91
+      },
+      "systems": [
+        {
+          "name": "UnitAuras",
+          "kind": "System",
+          "namespace": "C_UnitAuras",
+          "documentation": [],
+          "metadata": {
+            "Environment": "All",
+            "Predicates": []
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua"
+        }
+      ],
+      "functions": [
+        {
+          "name": "AddAuraSound",
+          "fullName": "C_UnitAuras.AddAuraSound",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "trigger",
+              "Type": "UnitAuraSoundTrigger",
+              "Nilable": false
+            },
+            {
+              "Name": "sound",
+              "Type": "UnitAuraSoundInfo",
+              "Nilable": false
+            }
+          ],
+          "returns": [
+            {
+              "Name": "auraSoundID",
+              "Type": "number",
+              "Nilable": true
+            }
+          ],
+          "metadata": {
+            "HasRestrictions": true,
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "AddBlockedAura",
+          "fullName": "C_UnitAuras.AddBlockedAura",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "unit",
+              "Type": "UnitTokenRestrictedForAddOns",
+              "Nilable": false
+            },
+            {
+              "Name": "auraInstanceID",
+              "Type": "number",
+              "Nilable": false
+            }
+          ],
+          "returns": [],
+          "metadata": {
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "AddPrivateAuraAnchor",
+          "fullName": "C_UnitAuras.AddPrivateAuraAnchor",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "args",
+              "Type": "AddPrivateAuraAnchorArgs",
+              "Nilable": false
+            }
+          ],
+          "returns": [
+            {
+              "Name": "anchorID",
+              "Type": "number",
+              "Nilable": true
+            }
+          ],
+          "metadata": {
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "AuraIsBigDefensive",
+          "fullName": "C_UnitAuras.AuraIsBigDefensive",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "spellID",
+              "Type": "SpellIdentifier",
+              "Nilable": false
+            }
+          ],
+          "returns": [
+            {
+              "Name": "isBigDefensive",
+              "Type": "bool",
+              "Nilable": false
+            }
+          ],
+          "metadata": {
+            "SecretArguments": "AllowedWhenTainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "AuraIsPrivate",
+          "fullName": "C_UnitAuras.AuraIsPrivate",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "spellID",
+              "Type": "SpellIdentifier",
+              "Nilable": false
+            }
+          ],
+          "returns": [
+            {
+              "Name": "isPrivate",
+              "Type": "bool",
+              "Nilable": false
+            }
+          ],
+          "metadata": {
+            "SecretArguments": "AllowedWhenTainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "CancelAuraByInstanceID",
+          "fullName": "C_UnitAuras.CancelAuraByInstanceID",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "unit",
+              "Type": "UnitTokenRestrictedForAddOns",
+              "Nilable": false,
+              "NeverSecret": true
+            },
+            {
+              "Name": "auraInstanceID",
+              "Type": "number",
+              "Nilable": false
+            }
+          ],
+          "returns": [],
+          "metadata": {
+            "RequiresUnitAuraAccess": true,
+            "HasRestrictions": true,
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "ClearBlockedAuras",
+          "fullName": "C_UnitAuras.ClearBlockedAuras",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "unit",
+              "Type": "UnitTokenRestrictedForAddOns",
+              "Nilable": false
+            }
+          ],
+          "returns": [],
+          "metadata": {
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "DoesAuraHaveExpirationTime",
+          "fullName": "C_UnitAuras.DoesAuraHaveExpirationTime",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [
+            "Returns true if an aura instance will expire after a certain amount of time."
+          ],
+          "arguments": [
+            {
+              "Name": "auraInstanceUnit",
+              "Type": "UnitToken",
+              "Nilable": false
+            },
+            {
+              "Name": "auraInstanceID",
+              "Type": "number",
+              "Nilable": false
+            }
+          ],
+          "returns": [
+            {
+              "Name": "hasExpirationTime",
+              "Type": "bool",
+              "Nilable": false
+            }
+          ],
+          "metadata": {
+            "RequiresUnitAuraAccess": true,
+            "RequiresValidUnitAuraInstance": true,
+            "SecretWhenUnitAuraRestricted": true,
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "GetAuraApplicationDisplayCount",
+          "fullName": "C_UnitAuras.GetAuraApplicationDisplayCount",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [
+            "Formats a string for displaying the number of applications an aura has present."
+          ],
+          "arguments": [
+            {
+              "Name": "auraInstanceUnit",
+              "Type": "UnitToken",
+              "Nilable": false
+            },
+            {
+              "Name": "auraInstanceID",
+              "Type": "number",
+              "Nilable": false
+            },
+            {
+              "Name": "minDisplayCount",
+              "Type": "number",
+              "Nilable": false,
+              "NeverSecret": true,
+              "Default": 2,
+              "Documentation": [
+                "Minimum number of applications required; if the application count is below this figure an empty string will be returned."
+              ]
+            },
+            {
+              "Name": "maxDisplayCount",
+              "Type": "number",
+              "Nilable": true,
+              "NeverSecret": true,
+              "Documentation": [
+                "Maximum number of applications allowed; if the application count is above this figure then the string '*' will be returned."
+              ]
+            }
+          ],
+          "returns": [
+            {
+              "Name": "count",
+              "Type": "string",
+              "Nilable": false
+            }
+          ],
+          "metadata": {
+            "RequiresUnitAuraAccess": true,
+            "RequiresValidUnitAuraInstance": true,
+            "SecretWhenUnitAuraRestricted": true,
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "GetAuraBaseDuration",
+          "fullName": "C_UnitAuras.GetAuraBaseDuration",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [
+            "Returns the base duration of the given spell (or aura). Takes an optional spellID to use as the new duration if that cannot be derived from the aura, if that value isn't supplied the aura's spellID will be used"
+          ],
+          "arguments": [
+            {
+              "Name": "auraInstanceUnit",
+              "Type": "UnitToken",
+              "Nilable": false
+            },
+            {
+              "Name": "auraInstanceID",
+              "Type": "number",
+              "Nilable": false
+            },
+            {
+              "Name": "spellID",
+              "Type": "SpellIdentifier",
+              "Nilable": true
+            }
+          ],
+          "returns": [
+            {
+              "Name": "newDuration",
+              "Type": "number",
+              "Nilable": true
+            }
+          ],
+          "metadata": {
+            "RequiresUnitAuraAccess": true,
+            "RequiresValidUnitAuraInstance": true,
+            "SecretWhenUnitAuraRestricted": true,
+            "SecretArguments": "AllowedWhenTainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "GetAuraDataByAuraInstanceID",
+          "fullName": "C_UnitAuras.GetAuraDataByAuraInstanceID",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "unit",
+              "Type": "UnitTokenRestrictedForAddOns",
+              "Nilable": false,
+              "NeverSecret": true
+            },
+            {
+              "Name": "auraInstanceID",
+              "Type": "number",
+              "Nilable": false
+            }
+          ],
+          "returns": [
+            {
+              "Name": "aura",
+              "Type": "AuraData",
+              "Nilable": true
+            }
+          ],
+          "metadata": {
+            "RequiresUnitAuraAccess": true,
+            "SecretWhenUnitAuraRestricted": true,
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "GetAuraDataByIndex",
+          "fullName": "C_UnitAuras.GetAuraDataByIndex",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "unit",
+              "Type": "UnitTokenRestrictedForAddOns",
+              "Nilable": false
+            },
+            {
+              "Name": "index",
+              "Type": "luaIndex",
+              "Nilable": false
+            },
+            {
+              "Name": "filter",
+              "Type": "AuraFilters",
+              "Nilable": true
+            }
+          ],
+          "returns": [
+            {
+              "Name": "aura",
+              "Type": "AuraData",
+              "Nilable": true
+            }
+          ],
+          "metadata": {
+            "RequiresUnitAuraAccess": true,
+            "SecretWhenUnitAuraRestricted": true,
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "GetAuraDataBySlot",
+          "fullName": "C_UnitAuras.GetAuraDataBySlot",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "unit",
+              "Type": "UnitTokenRestrictedForAddOns",
+              "Nilable": false,
+              "NeverSecret": true
+            },
+            {
+              "Name": "slot",
+              "Type": "number",
+              "Nilable": false
+            }
+          ],
+          "returns": [
+            {
+              "Name": "aura",
+              "Type": "AuraData",
+              "Nilable": true
+            }
+          ],
+          "metadata": {
+            "RequiresUnitAuraAccess": true,
+            "SecretWhenUnitAuraRestricted": true,
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "GetAuraDataBySpellName",
+          "fullName": "C_UnitAuras.GetAuraDataBySpellName",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "unit",
+              "Type": "UnitTokenRestrictedForAddOns",
+              "Nilable": false,
+              "NeverSecret": true
+            },
+            {
+              "Name": "spellName",
+              "Type": "cstring",
+              "Nilable": false
+            },
+            {
+              "Name": "filter",
+              "Type": "AuraFilters",
+              "Nilable": true
+            }
+          ],
+          "returns": [
+            {
+              "Name": "aura",
+              "Type": "AuraData",
+              "Nilable": true
+            }
+          ],
+          "metadata": {
+            "SecretWhenUnitAuraRestricted": true,
+            "RequiresNonSecretAura": true,
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "GetAuraDispelTypeColor",
+          "fullName": "C_UnitAuras.GetAuraDispelTypeColor",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [
+            "Queries the dispel type associated with an aura instance and remaps it to a color via a curve, with the dispel type ID used as the 'x' value."
+          ],
+          "arguments": [
+            {
+              "Name": "auraInstanceUnit",
+              "Type": "UnitToken",
+              "Nilable": false
+            },
+            {
+              "Name": "auraInstanceID",
+              "Type": "number",
+              "Nilable": false
+            },
+            {
+              "Name": "curve",
+              "Type": "LuaColorCurveObject",
+              "Nilable": false
+            }
+          ],
+          "returns": [
+            {
+              "Name": "dispelTypeColor",
+              "Type": "colorRGBA",
+              "Mixin": "ColorMixin",
+              "Nilable": false
+            }
+          ],
+          "metadata": {
+            "RequiresUnitAuraAccess": true,
+            "RequiresValidUnitAuraInstance": true,
+            "SecretWhenUnitAuraRestricted": true,
+            "SecretWhenCurveSecret": true,
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "GetAuraDuration",
+          "fullName": "C_UnitAuras.GetAuraDuration",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "auraInstanceUnit",
+              "Type": "UnitToken",
+              "Nilable": false
+            },
+            {
+              "Name": "auraInstanceID",
+              "Type": "number",
+              "Nilable": false
+            }
+          ],
+          "returns": [
+            {
+              "Name": "duration",
+              "Type": "LuaDurationObject",
+              "Nilable": false
+            }
+          ],
+          "metadata": {
+            "RequiresUnitAuraAccess": true,
+            "RequiresValidUnitAuraInstance": true,
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "GetAuraSlots",
+          "fullName": "C_UnitAuras.GetAuraSlots",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "unit",
+              "Type": "UnitTokenRestrictedForAddOns",
+              "Nilable": false
+            },
+            {
+              "Name": "filter",
+              "Type": "AuraFilters",
+              "Nilable": true
+            },
+            {
+              "Name": "maxSlots",
+              "Type": "number",
+              "Nilable": true
+            },
+            {
+              "Name": "continuationToken",
+              "Type": "number",
+              "Nilable": true
+            }
+          ],
+          "returns": [
+            {
+              "Name": "outContinuationToken",
+              "Type": "number",
+              "Nilable": true
+            },
+            {
+              "Name": "slots",
+              "Type": "number",
+              "Nilable": false,
+              "StrideIndex": 1
+            }
+          ],
+          "metadata": {
+            "RequiresUnitAuraAccess": true,
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "GetBuffDataByIndex",
+          "fullName": "C_UnitAuras.GetBuffDataByIndex",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "unit",
+              "Type": "UnitTokenRestrictedForAddOns",
+              "Nilable": false
+            },
+            {
+              "Name": "index",
+              "Type": "luaIndex",
+              "Nilable": false
+            },
+            {
+              "Name": "filter",
+              "Type": "AuraFilters",
+              "Nilable": true
+            }
+          ],
+          "returns": [
+            {
+              "Name": "aura",
+              "Type": "AuraData",
+              "Nilable": true
+            }
+          ],
+          "metadata": {
+            "RequiresUnitAuraAccess": true,
+            "SecretWhenUnitAuraRestricted": true,
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "GetCooldownAuraBySpellID",
+          "fullName": "C_UnitAuras.GetCooldownAuraBySpellID",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "spellID",
+              "Type": "SpellIdentifier",
+              "Nilable": false
+            }
+          ],
+          "returns": [
+            {
+              "Name": "cooldownSpellID",
+              "Type": "number",
+              "Nilable": true
+            }
+          ],
+          "metadata": {
+            "SecretArguments": "AllowedWhenTainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "GetDebuffDataByIndex",
+          "fullName": "C_UnitAuras.GetDebuffDataByIndex",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "unit",
+              "Type": "UnitTokenRestrictedForAddOns",
+              "Nilable": false
+            },
+            {
+              "Name": "index",
+              "Type": "luaIndex",
+              "Nilable": false
+            },
+            {
+              "Name": "filter",
+              "Type": "AuraFilters",
+              "Nilable": true
+            }
+          ],
+          "returns": [
+            {
+              "Name": "aura",
+              "Type": "AuraData",
+              "Nilable": true
+            }
+          ],
+          "metadata": {
+            "RequiresUnitAuraAccess": true,
+            "SecretWhenUnitAuraRestricted": true,
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "GetGroupBuffVisualAlerts",
+          "fullName": "C_UnitAuras.GetGroupBuffVisualAlerts",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [],
+          "returns": [
+            {
+              "Name": "visualAlerts",
+              "Type": "table",
+              "InnerType": "GroupBuffVisualAlertInfo",
+              "Nilable": false
+            }
+          ],
+          "metadata": {},
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "GetHiddenGroupBuffs",
+          "fullName": "C_UnitAuras.GetHiddenGroupBuffs",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [],
+          "returns": [
+            {
+              "Name": "spellIDs",
+              "Type": "table",
+              "InnerType": "number",
+              "Nilable": false
+            }
+          ],
+          "metadata": {},
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "GetPlayerAuraBySpellID",
+          "fullName": "C_UnitAuras.GetPlayerAuraBySpellID",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "spellID",
+              "Type": "SpellIdentifier",
+              "Nilable": false
+            }
+          ],
+          "returns": [
+            {
+              "Name": "aura",
+              "Type": "AuraData",
+              "Nilable": true
+            }
+          ],
+          "metadata": {
+            "SecretWhenUnitAuraRestricted": true,
+            "RequiresNonSecretAura": true,
+            "SecretArguments": "AllowedWhenTainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "GetRefreshExtendedDuration",
+          "fullName": "C_UnitAuras.GetRefreshExtendedDuration",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [
+            "Returns the client-predicted new duration of this aura if it were cast again right now. Takes an optional spellID to use as the new duration if that cannot be derived from the aura, if that value isn't supplied the aura's spellID will be used"
+          ],
+          "arguments": [
+            {
+              "Name": "auraInstanceUnit",
+              "Type": "UnitToken",
+              "Nilable": false
+            },
+            {
+              "Name": "auraInstanceID",
+              "Type": "number",
+              "Nilable": false
+            },
+            {
+              "Name": "spellID",
+              "Type": "SpellIdentifier",
+              "Nilable": true
+            }
+          ],
+          "returns": [
+            {
+              "Name": "newDuration",
+              "Type": "number",
+              "Nilable": true
+            }
+          ],
+          "metadata": {
+            "RequiresUnitAuraAccess": true,
+            "RequiresValidUnitAuraInstance": true,
+            "SecretWhenUnitAuraRestricted": true,
+            "SecretArguments": "AllowedWhenTainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "GetUnitAuraBySpellID",
+          "fullName": "C_UnitAuras.GetUnitAuraBySpellID",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [
+            "Returns the first instance of an aura on a unit matching a given spell ID. Returns nil if no such aura is found. Additionally can return nil if querying a unit that is not visible (eg. party members on other maps)."
+          ],
+          "arguments": [
+            {
+              "Name": "unit",
+              "Type": "UnitTokenRestrictedForAddOns",
+              "Nilable": false,
+              "NeverSecret": true
+            },
+            {
+              "Name": "spellID",
+              "Type": "SpellIdentifier",
+              "Nilable": false
+            }
+          ],
+          "returns": [
+            {
+              "Name": "aura",
+              "Type": "AuraData",
+              "Nilable": true
+            }
+          ],
+          "metadata": {
+            "SecretWhenUnitAuraRestricted": true,
+            "RequiresNonSecretAura": true,
+            "SecretArguments": "AllowedWhenTainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "GetUnitAuraInstanceIDs",
+          "fullName": "C_UnitAuras.GetUnitAuraInstanceIDs",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "unit",
+              "Type": "UnitTokenRestrictedForAddOns",
+              "Nilable": false,
+              "NeverSecret": true
+            },
+            {
+              "Name": "filter",
+              "Type": "AuraFilters",
+              "Nilable": false
+            },
+            {
+              "Name": "maxCount",
+              "Type": "number",
+              "Nilable": true
+            },
+            {
+              "Name": "sortRule",
+              "Type": "UnitAuraSortRule",
+              "Nilable": false,
+              "Default": "Unsorted"
+            },
+            {
+              "Name": "sortDirection",
+              "Type": "UnitAuraSortDirection",
+              "Nilable": false,
+              "Default": "Normal"
+            }
+          ],
+          "returns": [
+            {
+              "Name": "auraInstanceIDs",
+              "Type": "table",
+              "InnerType": "number",
+              "Nilable": false
+            }
+          ],
+          "metadata": {
+            "RequiresUnitAuraAccess": true,
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "GetUnitAuras",
+          "fullName": "C_UnitAuras.GetUnitAuras",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "unit",
+              "Type": "UnitTokenRestrictedForAddOns",
+              "Nilable": false,
+              "NeverSecret": true
+            },
+            {
+              "Name": "filter",
+              "Type": "AuraFilters",
+              "Nilable": false
+            },
+            {
+              "Name": "maxCount",
+              "Type": "number",
+              "Nilable": true
+            },
+            {
+              "Name": "sortRule",
+              "Type": "UnitAuraSortRule",
+              "Nilable": false,
+              "Default": "Unsorted"
+            },
+            {
+              "Name": "sortDirection",
+              "Type": "UnitAuraSortDirection",
+              "Nilable": false,
+              "Default": "Normal"
+            }
+          ],
+          "returns": [
+            {
+              "Name": "auras",
+              "Type": "table",
+              "InnerType": "AuraData",
+              "Nilable": false,
+              "ConditionalSecretContents": true
+            }
+          ],
+          "metadata": {
+            "RequiresUnitAuraAccess": true,
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "IsAuraFilteredOutByInstanceID",
+          "fullName": "C_UnitAuras.IsAuraFilteredOutByInstanceID",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "unit",
+              "Type": "UnitTokenRestrictedForAddOns",
+              "Nilable": false
+            },
+            {
+              "Name": "auraInstanceID",
+              "Type": "number",
+              "Nilable": false
+            },
+            {
+              "Name": "filter",
+              "Type": "AuraFilters",
+              "Nilable": false
+            }
+          ],
+          "returns": [
+            {
+              "Name": "isFiltered",
+              "Type": "bool",
+              "Nilable": false
+            }
+          ],
+          "metadata": {
+            "RequiresUnitAuraAccess": true,
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "RemoveAuraSound",
+          "fullName": "C_UnitAuras.RemoveAuraSound",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "auraSoundID",
+              "Type": "number",
+              "Nilable": false
+            }
+          ],
+          "returns": [],
+          "metadata": {
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "RemovePrivateAuraAnchor",
+          "fullName": "C_UnitAuras.RemovePrivateAuraAnchor",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "anchorID",
+              "Type": "number",
+              "Nilable": false
+            }
+          ],
+          "returns": [],
+          "metadata": {
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "ResetAuraDataProvider",
+          "fullName": "C_UnitAuras.ResetAuraDataProvider",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [],
+          "returns": [],
+          "metadata": {},
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "SetGroupBuffVisualAlerts",
+          "fullName": "C_UnitAuras.SetGroupBuffVisualAlerts",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "visualAlerts",
+              "Type": "table",
+              "InnerType": "GroupBuffVisualAlertInfo",
+              "Nilable": false,
+              "NeverSecretContents": true
+            }
+          ],
+          "returns": [],
+          "metadata": {
+            "HasRestrictions": true,
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "SetHiddenGroupBuffs",
+          "fullName": "C_UnitAuras.SetHiddenGroupBuffs",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "spellIDs",
+              "Type": "table",
+              "InnerType": "number",
+              "Nilable": false,
+              "NeverSecretContents": true
+            }
+          ],
+          "returns": [],
+          "metadata": {
+            "HasRestrictions": true,
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "SetPrivateWarningTextAnchor",
+          "fullName": "C_UnitAuras.SetPrivateWarningTextAnchor",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "parent",
+              "Type": "SimpleFrame",
+              "Nilable": false
+            },
+            {
+              "Name": "anchor",
+              "Type": "AnchorBinding",
+              "Nilable": true
+            }
+          ],
+          "returns": [],
+          "metadata": {
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "SwitchAuraDataProvider",
+          "fullName": "C_UnitAuras.SwitchAuraDataProvider",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [],
+          "returns": [],
+          "metadata": {},
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        },
+        {
+          "name": "WantsAlteredForm",
+          "fullName": "C_UnitAuras.WantsAlteredForm",
+          "namespace": "C_UnitAuras",
+          "owner": null,
+          "kind": "function",
+          "documentation": [],
+          "arguments": [
+            {
+              "Name": "unit",
+              "Type": "UnitToken",
+              "Nilable": false
+            }
+          ],
+          "returns": [
+            {
+              "Name": "wantsAlteredForm",
+              "Type": "bool",
+              "Nilable": false
+            }
+          ],
+          "metadata": {
+            "SecretArguments": "AllowedWhenUntainted"
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua",
+          "sourceKind": "blizzard-documentation"
+        }
+      ],
+      "events": [
+        {
+          "name": "AuraDataProviderSwitch",
+          "literalName": "AURA_DATA_PROVIDER_SWITCH",
+          "namespace": "C_UnitAuras",
+          "documentation": [],
+          "payload": [
+            {
+              "Name": "useRealDataProvider",
+              "Type": "bool",
+              "Nilable": false
+            }
+          ],
+          "metadata": {
+            "SynchronousEvent": true
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua"
+        },
+        {
+          "name": "GroupBuffVisualAlertsChanged",
+          "literalName": "GROUP_BUFF_VISUAL_ALERTS_CHANGED",
+          "namespace": "C_UnitAuras",
+          "documentation": [],
+          "payload": [
+            {
+              "Name": "visualAlerts",
+              "Type": "table",
+              "InnerType": "GroupBuffVisualAlertInfo",
+              "Nilable": false
+            }
+          ],
+          "metadata": {
+            "SynchronousEvent": true
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua"
+        },
+        {
+          "name": "HiddenGroupBuffsChanged",
+          "literalName": "HIDDEN_GROUP_BUFFS_CHANGED",
+          "namespace": "C_UnitAuras",
+          "documentation": [],
+          "payload": [
+            {
+              "Name": "spellIDs",
+              "Type": "table",
+              "InnerType": "number",
+              "Nilable": false
+            }
+          ],
+          "metadata": {
+            "SynchronousEvent": true
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua"
+        },
+        {
+          "name": "UnitAura",
+          "literalName": "UNIT_AURA",
+          "namespace": "C_UnitAuras",
+          "documentation": [],
+          "payload": [
+            {
+              "Name": "unitTarget",
+              "Type": "UnitTokenVariant",
+              "Nilable": false
+            },
+            {
+              "Name": "updateInfo",
+              "Type": "UnitAuraUpdateInfo",
+              "Nilable": false
+            }
+          ],
+          "metadata": {
+            "SecretWhenAurasRestricted": true,
+            "SynchronousEvent": true
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua"
+        },
+        {
+          "name": "UnitAuraBlockListCleared",
+          "literalName": "UNIT_AURA_BLOCK_LIST_CLEARED",
+          "namespace": "C_UnitAuras",
+          "documentation": [],
+          "payload": [
+            {
+              "Name": "unitTarget",
+              "Type": "UnitTokenVariant",
+              "Nilable": false
+            }
+          ],
+          "metadata": {
+            "SynchronousEvent": true
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua"
+        },
+        {
+          "name": "UnitAuraBlocked",
+          "literalName": "UNIT_AURA_BLOCKED",
+          "namespace": "C_UnitAuras",
+          "documentation": [],
+          "payload": [
+            {
+              "Name": "unitTarget",
+              "Type": "UnitTokenVariant",
+              "Nilable": false
+            },
+            {
+              "Name": "auraInstanceID",
+              "Type": "number",
+              "Nilable": false,
+              "SecretValue": true
+            }
+          ],
+          "metadata": {
+            "SynchronousEvent": true
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua"
+        }
+      ],
+      "enumerations": [],
+      "structures": [],
+      "widgets": [
+        {
+          "name": "AuraContainer",
+          "kind": "Intrinsic",
+          "inherits": [
+            "Frame"
+          ],
+          "documentation": [],
+          "metadata": {
+            "Mixins": [
+              {
+                "key": "AuraContainerInboundMixin",
+                "source": "secure",
+                "targetPartition": "public",
+                "inboundPartition": "forbidden",
+                "secureDelegates": "true"
+              }
+            ]
+          },
+          "sourceFile": "Interface/AddOns/Blizzard_AuraContainer/Blizzard_AuraContainer.xml",
+          "methods": [
+            {
+              "name": "GetUnit",
+              "fullName": "AuraContainer:GetUnit",
+              "namespace": null,
+              "owner": "AuraContainer",
+              "kind": "method",
+              "documentation": [],
+              "arguments": [],
+              "returns": [],
+              "metadata": {
+                "SourceMixin": "AuraContainerSharedMixin"
+              },
+              "sourceFile": "Interface/AddOns/Blizzard_AuraContainer/Blizzard_AuraContainer.lua",
+              "sourceKind": "framexml"
+            },
+            {
+              "name": "IsEnabled",
+              "fullName": "AuraContainer:IsEnabled",
+              "namespace": null,
+              "owner": "AuraContainer",
+              "kind": "method",
+              "documentation": [],
+              "arguments": [],
+              "returns": [],
+              "metadata": {
+                "SourceMixin": "AuraContainerSharedMixin"
+              },
+              "sourceFile": "Interface/AddOns/Blizzard_AuraContainer/Blizzard_AuraContainer.lua",
+              "sourceKind": "framexml"
+            },
+            {
+              "name": "SetEnabled",
+              "fullName": "AuraContainer:SetEnabled",
+              "namespace": null,
+              "owner": "AuraContainer",
+              "kind": "method",
+              "documentation": [],
+              "arguments": [
+                {
+                  "Name": "enabled",
+                  "Type": "unknown",
+                  "Nilable": false
+                }
+              ],
+              "returns": [],
+              "metadata": {
+                "SourceMixin": "AuraContainerSharedMixin"
+              },
+              "sourceFile": "Interface/AddOns/Blizzard_AuraContainer/Blizzard_AuraContainer.lua",
+              "sourceKind": "framexml"
+            },
+            {
+              "name": "SetUnit",
+              "fullName": "AuraContainer:SetUnit",
+              "namespace": null,
+              "owner": "AuraContainer",
+              "kind": "method",
+              "documentation": [],
+              "arguments": [
+                {
+                  "Name": "unitToken",
+                  "Type": "unknown",
+                  "Nilable": false
+                }
+              ],
+              "returns": [],
+              "metadata": {
+                "SourceMixin": "AuraContainerSharedMixin"
+              },
+              "sourceFile": "Interface/AddOns/Blizzard_AuraContainer/Blizzard_AuraContainer.lua",
+              "sourceKind": "framexml"
+            },
+            {
+              "name": "UpdateAllAuras",
+              "fullName": "AuraContainer:UpdateAllAuras",
+              "namespace": null,
+              "owner": "AuraContainer",
+              "kind": "method",
+              "documentation": [],
+              "arguments": [],
+              "returns": [],
+              "metadata": {
+                "SourceMixin": "AuraContainerSharedMixin"
+              },
+              "sourceFile": "Interface/AddOns/Blizzard_AuraContainer/Blizzard_AuraContainer.lua",
+              "sourceKind": "framexml"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

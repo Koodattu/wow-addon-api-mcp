@@ -1,4 +1,5 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+import { readFile } from 'node:fs/promises';
 import * as z from 'zod/v4';
 
 import { loadCatalog } from './data-store.mjs';
@@ -30,7 +31,8 @@ function versionField(description = 'Retail patch, full client build, build numb
   return z.string().optional().describe(description);
 }
 
-export async function createServer({ manifestPath, packageVersion = '0.1.0' } = {}) {
+export async function createServer({ manifestPath, packageVersion } = {}) {
+  packageVersion ??= JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8')).version;
   const catalog = await loadCatalog(manifestPath);
   const server = new McpServer({ name: 'wow-addon-api', version: packageVersion }, {
     instructions: 'Use this server for World of Warcraft retail AddOn API facts from patch 10.0.0 through the current mainline patch. Calls default to latest. For addon migrations, resolve the source patch, use compare_api or get_api_history, and keep every claim tied to the dataset label returned by the tool. Treat security metadata such as SecretArguments, HasRestrictions, RequiresUnitAuraAccess, and ConditionalSecretContents as authoritative constraints. Historical presence does not by itself prove an official replacement.',
