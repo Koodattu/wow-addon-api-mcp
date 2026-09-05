@@ -1,5 +1,5 @@
 import { readFile } from 'node:fs/promises';
-import { existsSync } from 'node:fs';
+import { readdirSync } from 'node:fs';
 import path from 'node:path';
 
 import { evaluateNode, memberName, parseLuaSource } from './lua-doc-parser.mjs';
@@ -144,6 +144,20 @@ export async function extractFrameXmlResources(sourceRoot, tocFiles) {
   const entries = [];
   const excluded = [];
   const relative = (file) => path.relative(sourceRoot, file).split(path.sep).join('/');
+  const directories = new Map();
+  function sourcePath(file) {
+    const name = relative(file);
+    if (name.startsWith('../') || path.isAbsolute(name)) throw new Error('Source include leaves checkout: ' + name);
+    let current = path.resolve(sourceRoot);
+    for (const part of name.split('/')) {
+      if (!directories.has(current)) directories.set(current, readdirSync(current));
+      const matches = directories.get(current).filter((entry) => entry.toLowerCase() === part.toLowerCase());
+      if (matches.length > 1) throw new Error('Ambiguous source filename: ' + name);
+      if (!matches.length) return null;
+      current = path.join(current, matches[0]);
+    }
+    return current;
+  }
   const paths = new Set(tocFiles);
   const selected = tocFiles.filter((file) => {
     const addon = path.basename(path.dirname(file));
@@ -171,14 +185,19 @@ export async function extractFrameXmlResources(sourceRoot, tocFiles) {
 
   function resolveInclude(from, target, addon) {
     const replaced = target.replaceAll('[Family]', 'Mainline').replaceAll('[Game]', 'Standard').replaceAll('\\', '/');
-    if (replaced.startsWith('Interface/')) return path.resolve(sourceRoot, replaced);
+    if (/^Interface\//i.test(replaced)) {
+      const file = sourcePath(path.resolve(sourceRoot, replaced));
+      if (!file) throw new Error('Missing source include: ' + relative(from) + ' -> ' + target);
+      return file;
+    }
     const addonRoot = selected.find((toc) => path.basename(path.dirname(toc)) === addon);
-    const sibling = path.resolve(path.dirname(from), replaced);
-    const rootRelative = path.resolve(addonRoot ? path.dirname(addonRoot) : path.dirname(from), replaced);
-    if (sibling !== rootRelative && existsSync(sibling) && existsSync(rootRelative)) {
+    const sibling = sourcePath(path.resolve(path.dirname(from), replaced));
+    const rootRelative = sourcePath(path.resolve(addonRoot ? path.dirname(addonRoot) : path.dirname(from), replaced));
+    if (sibling && rootRelative && sibling !== rootRelative) {
       throw new Error('Ambiguous source include: ' + relative(from) + ' -> ' + target);
     }
-    return existsSync(sibling) ? sibling : rootRelative;
+    if (!sibling && !rootRelative) throw new Error('Missing source include: ' + relative(from) + ' -> ' + target);
+    return sibling ?? rootRelative;
   }
 
   for (const toc of selected) {

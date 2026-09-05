@@ -85,7 +85,7 @@ test('selects mainline TOCs and resolves both source include conventions determi
       'MissingExcluded.lua [ExcludeLoadGameType standard]',
       '[Game].lua',
     ].join('\n'),
-    'Mainline/UI.xml': '<Ui><Script file="Sibling.lua"/><Script file="Mainline/RootRelative.lua"/><Frame name="ExampleTemplate" virtual="true"/></Ui>',
+    'Mainline/UI.xml': '<Ui><Script file="SIBLING.lua"/><Script file="mainline/RootRelative.lua"/><Frame name="ExampleTemplate" virtual="true"/></Ui>',
     'Mainline/Sibling.lua': 'function PublicFunction() end',
     'Mainline/RootRelative.lua': 'ExampleMixin = {}',
     'Standard.lua': 'CreateFont("ExampleFont")',
@@ -97,6 +97,7 @@ test('selects mainline TOCs and resolves both source include conventions determi
   assert.equal(first.coverage.files, 4);
   assert.equal(first.counts.template, 1);
   assert.ok(first.entries.some((entry) => entry.name === 'ExampleMixin'));
+  assert.ok(first.entries.some((entry) => entry.sourceFile === 'Interface/AddOns/Example/Mainline/Sibling.lua'));
   assert.ok(first.entries.every((entry) => entry.addon === 'Example'));
 });
 
