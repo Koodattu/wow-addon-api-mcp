@@ -163,7 +163,7 @@ export async function extractFrameXmlResources(sourceRoot, tocFiles) {
     const addon = path.basename(path.dirname(file));
     return path.basename(file) === addon + '_Mainline.toc'
       || (path.basename(file) === addon + '.toc' && !paths.has(path.join(path.dirname(file), addon + '_Mainline.toc')));
-  }).sort();
+  }).sort((a, b) => relative(a) < relative(b) ? -1 : relative(a) > relative(b) ? 1 : 0);
 
   async function include(file, addon) {
     if (files.has(file)) return;

@@ -92,8 +92,16 @@ test('selects mainline TOCs and resolves both source include conventions determi
   };
   for (const [name, contents] of Object.entries(files)) await writeFile(path.join(addon, name), contents);
   const tocs = Object.keys(files).filter((name) => name.endsWith('.toc')).map((name) => path.join(addon, name));
+  for (const name of ['GlueBase', 'Glue']) {
+    const directory = path.join(root, 'Interface', 'AddOns', name);
+    await mkdir(directory);
+    const toc = path.join(directory, name + '.toc');
+    await writeFile(toc, '## AllowLoad: Glue');
+    tocs.push(toc);
+  }
   const first = await extractFrameXmlResources(root, tocs);
   assert.deepEqual(first, await extractFrameXmlResources(root, [...tocs].reverse()));
+  assert.deepEqual(first.coverage.excludedAddOns, ['Interface/AddOns/Glue/Glue.toc', 'Interface/AddOns/GlueBase/GlueBase.toc']);
   assert.equal(first.coverage.files, 4);
   assert.equal(first.counts.template, 1);
   assert.ok(first.entries.some((entry) => entry.name === 'ExampleMixin'));
