@@ -24,5 +24,20 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm test
+      - name: Resolve pinned Blizzard source
+        if: matrix.node == 24
+        id: source
+        run: node -e "const m=require('./data/manifest.json');console.log('commit='+m.versions.find(v=>v.version===m.default).commit)" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@v7
+        if: matrix.node == 24
+        with:
+          repository: Gethe/wow-ui-source
+          ref: ${{ steps.source.outputs.commit }}
+          path: .cache/wow-ui-source
+      - name: Verify deterministic dataset extraction
+        if: matrix.node == 24
+        run: |
+          npm run data:build
+          git diff --exit-code -- data/manifest.json data/retail
       - if: matrix.node == 24
         run: npm run pack:check

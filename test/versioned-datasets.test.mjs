@@ -53,6 +53,7 @@ test('bundles a complete, internally consistent retail version catalog', async (
     assert.equal(dataset.source.build, entry.build);
     assert.equal(dataset.source.commit, entry.commit);
     assert.deepEqual(dataset.stats, entry.stats);
+    assert.deepEqual(dataset.resources?.counts, entry.resourceCounts);
   }));
 });
 

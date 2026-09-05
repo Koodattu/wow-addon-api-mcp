@@ -54,6 +54,7 @@ Use `"command": "cmd"` and prefix the arguments with `"/c"` on Windows if the cl
 - Public methods discovered from intrinsic FrameXML widgets such as `AuraContainer` and `AuraButton`
 - Raw API constraints including `SecretArguments`, `HasRestrictions`, `RequiresUnitAuraAccess`, `ConditionalSecretContents`, `NeverSecret`, and related fields
 - The exact upstream client build, commit, and source file for each snapshot
+- Supplementary mainline source symbols, XML templates, mixins, named UI objects, and literal CVar/atlas references, with declaration/reference labels and source line links
 
 The server exposes these tools:
 
@@ -71,8 +72,14 @@ The server exposes these tools:
 | `compare_api` | Compare one exact API between two retail patches |
 | `diff_versions` | List added, removed, and structurally changed APIs, optionally by kind or namespace |
 | `get_api_history` | Show when an exact API appeared, disappeared, or changed |
+| `lookup_resource` | Find exact supplementary resource names and their source declarations/references |
+| `search_resources` | Search supplementary resource names with category filters and pagination |
 
-All single-version query tools accept an optional `version`. It can be a patch (`12.1.0` or `12.1`), full client version (`12.1.0.69283`), build number (`69283`), or `latest`. Omitting it selects the manifest's current default.
+All single-version query tools accept an optional `version`. It can be a patch (`12.1.0` or `12.1`), full client version or build number returned by `list_versions`, or `latest`. Omitting it selects the manifest's current default.
+
+Supplementary tools accept `query`, optional `kind` (`symbol`, `template`, `mixin`, `frame`, `cvar`, or `atlas`), `version`, `limit`, and `offset`. Follow `nextOffset` to retrieve more matches. For example, use `lookup_resource` with `query: "BackdropTemplate"` and `kind: "template"` to inspect inheritance and attached mixins.
+
+Resource coverage starts with the refreshed `12.1.0` snapshot. Older snapshots report that resources were not collected; this does not mean those resources did not exist. Definitions come from source, not execution: call-site references such as `CreateFrame` do not establish an engine signature or addon-safe access. Parameter names on Lua definitions do not establish types, optionality, or returns. XML child names containing `$parent` are patterns, and template children are not automatically instantiated global frames. CVar and atlas results are usage references rather than complete registries or defaults. See [the source audit](docs/SOURCE_AUDIT.md) for scope and remaining gaps.
 
 For an old-addon migration, a useful LLM workflow is:
 

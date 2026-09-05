@@ -42,7 +42,19 @@ export function formatEntry(entryKind, entry, sourceCommit = 'live') {
 export function formatMatches(matches, info) {
   const header = info ? `Dataset: ${datasetLabel(info)}\n\n` : '';
   if (matches.length === 0) return `${header}No matching WoW API entries found.`;
-  return `${header}${matches.map(({ entryKind, entry }) => formatEntry(entryKind, entry, info?.commit ?? info?.selected?.commit)).join('\n\n---\n\n')}`;
+  const note = matches.every((match) => match.matchType === 'short-name')
+    ? 'Only short-name matches were found. These qualified APIs do not establish that a global with the requested name exists. Use lookup_resource for Blizzard source references.\n\n' : '';
+  return `${header}${note}${matches.map(({ entryKind, entry }) => formatEntry(entryKind, entry, info?.commit ?? info?.selected?.commit)).join('\n\n---\n\n')}`;
+}
+
+export function formatResources(result, info) {
+  const header = `Dataset: ${datasetLabel(info)}\n\n`;
+  if (!result.available) return `${header}Supplementary resources were not collected for this snapshot. This does not establish that a resource was absent from that client.`;
+  const entries = result.entries.map((entry) => ({
+    ...entry,
+    sourceUrl: `https://github.com/Gethe/wow-ui-source/blob/${info.commit}/${entry.sourceFile}#L${entry.sourceLine}`,
+  }));
+  return `${header}Blizzard source inventory: declarations and references, not a runtime availability or safety guarantee. Parameter names do not establish types, optionality, or returns. CVar and atlas entries are usage references, not complete registries.\n\n${JSON.stringify({ ...result, entries }, null, 2)}`;
 }
 
 export function formatNamespace(namespace, result, info) {

@@ -8,7 +8,7 @@ Enable branch protection and require the `CI` checks before merge. Keep `.github
 
 ## 2. Bootstrap the npm package
 
-The unscoped npm name is `wow-addon-api-mcp`. A trusted publisher is configured from an existing package's settings, so bootstrap the first `0.1.0` release using one of these approaches:
+The unscoped npm name is `wow-addon-api-mcp`. This package is already bootstrapped and uses trusted publishing; maintainers can skip this section. For a new package, a trusted publisher requires an existing package, so publish its first release using one of these approaches:
 
 1. Run `npm login`, then `npm publish --access public` from a clean, tested checkout; or
 2. Add a short-lived granular npm automation token as the `NPM_TOKEN` repository secret and run the **Publish npm** workflow manually.
@@ -25,6 +25,8 @@ In the package settings on npmjs.com, add a GitHub Actions trusted publisher wit
 - Repository: `wow-addon-api-mcp`
 - Workflow filename: `publish.yml`
 - Allowed action: `npm publish`
+
+All trusted-publisher fields are case-sensitive. Use `Koodattu` exactly; a connection saved as `koodattu` fails authentication even though GitHub web URLs accept either capitalization.
 
 No environment is required by the checked-in workflow. npm requires GitHub-hosted runners, Node 22.14 or newer, npm 11.5.1 or newer, and `id-token: write`; the workflow uses Node 24, upgrades npm 11, and grants only the required permissions.
 

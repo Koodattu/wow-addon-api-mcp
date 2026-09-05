@@ -10,6 +10,7 @@ import {
   formatHistory,
   formatMatches,
   formatNamespace,
+  formatResources,
   formatVersionDiff,
   formatVersions,
 } from './formatters.mjs';
@@ -35,7 +36,7 @@ export async function createServer({ manifestPath, packageVersion } = {}) {
   packageVersion ??= JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8')).version;
   const catalog = await loadCatalog(manifestPath);
   const server = new McpServer({ name: 'wow-addon-api', version: packageVersion }, {
-    instructions: 'Use this server for World of Warcraft retail AddOn API facts from patch 10.0.0 through the current mainline patch. Calls default to latest. For addon migrations, resolve the source patch, use compare_api or get_api_history, and keep every claim tied to the dataset label returned by the tool. Treat security metadata such as SecretArguments, HasRestrictions, RequiresUnitAuraAccess, and ConditionalSecretContents as authoritative constraints. Historical presence does not by itself prove an official replacement.',
+    instructions: 'Use this server for World of Warcraft retail AddOn API facts from patch 10.0.0 through the current mainline patch. Calls default to latest. For addon migrations, resolve the source patch, use compare_api or get_api_history, and keep every claim tied to the dataset label returned by the tool. Treat security metadata such as SecretArguments, HasRestrictions, RequiresUnitAuraAccess, and ConditionalSecretContents as authoritative constraints. Historical presence does not by itself prove an official replacement. Use lookup_resource and search_resources for supplementary Blizzard source symbols, templates, mixins, named UI objects, CVars, and atlas references. Resource references are not documented API signatures or proof of runtime availability. Missing resource coverage is unknown, not absence.',
   });
 
   server.registerTool('get_dataset_info', {
@@ -77,6 +78,24 @@ export async function createServer({ manifestPath, packageVersion } = {}) {
     const store = await catalog.store(info.version);
     return textResponse(formatMatches(store.search(query, { kind, limit }), info));
   });
+
+  for (const [name, exact] of [['lookup_resource', true], ['search_resources', false]]) {
+    server.registerTool(name, {
+      description: `${exact ? 'Look up an exact' : 'Search a'} Blizzard source resource name: symbol, template, mixin, frame, CVar, or atlas. Returns declarations or references with source locations; does not prove runtime availability or a callable API contract. Older snapshots may have no resource coverage.`,
+      annotations: READ_ONLY,
+      inputSchema: {
+        query: z.string().min(1).describe('Resource name, such as CreateFrame, BackdropTemplate, or ScrollBoxListMixin'),
+        kind: z.enum(['symbol', 'template', 'mixin', 'frame', 'cvar', 'atlas']).optional(),
+        version: versionField(),
+        limit: z.number().int().min(1).max(100).default(20),
+        offset: z.number().int().min(0).default(0).describe('Use nextOffset from the previous result for more source matches'),
+      },
+    }, async ({ query, kind, version, limit, offset }) => {
+      const info = catalog.entry(version);
+      const store = await catalog.store(info.version);
+      return textResponse(formatResources(store.resources(query, { kind, exact, limit, offset }), info));
+    });
+  }
 
   server.registerTool('get_namespace', {
     description: 'List functions, events, types, and systems belonging to an exact namespace in one retail patch.',
