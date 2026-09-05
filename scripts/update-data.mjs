@@ -30,7 +30,7 @@ if (!existsSync(path.join(sourceRoot, '.git'))) {
     console.error(`Refusing to update unexpected origin at ${sourceRoot}: ${origin}`);
     process.exit(1);
   }
-  run('git', ['-c', `safe.directory=${safeRoot}`, '-C', sourceRoot, 'fetch', '--depth', '1', 'origin', 'live']);
+  run('git', ['-c', `safe.directory=${safeRoot}`, '-C', sourceRoot, 'fetch', 'origin', 'live']);
   run('git', ['-c', `safe.directory=${safeRoot}`, '-C', sourceRoot, 'checkout', 'live']);
   run('git', ['-c', `safe.directory=${safeRoot}`, '-C', sourceRoot, 'merge', '--ff-only', 'FETCH_HEAD']);
 }

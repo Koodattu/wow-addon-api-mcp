@@ -2,7 +2,7 @@
 
 A standalone, version-aware Model Context Protocol server for the World of Warcraft retail AddOn API. It ships pinned documentation snapshots inside the npm package, so users do **not** need VS Code, the `ketho.wow-api` extension, Lua, Git, WSL, or a live network connection after installation.
 
-The archive currently contains 26 retail patch snapshots from `10.0.0` through `12.1.0`. The default dataset is WoW `12.1.0.69283` and includes Blizzard's secret-value and restricted-API metadata. Every result identifies the selected patch and build so an LLM does not silently mix APIs from different versions.
+The archive contains retail patch snapshots from `10.0.0` onward, including Blizzard's secret-value and restricted-API metadata. Use `--dataset-info` for the bundled default build and `--list-versions` for the complete patch catalog. Every result identifies the selected patch and build so an LLM does not silently mix APIs from different versions.
 
 ## Install
 
