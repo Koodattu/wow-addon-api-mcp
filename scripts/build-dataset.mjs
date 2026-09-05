@@ -1,14 +1,13 @@
 import { spawnSync } from 'node:child_process';
-import { gzipSync } from 'node:zlib';
-import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
+import { mkdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 
 import { extractDataset } from './lib/extract-dataset.mjs';
-import { patchVersion, updateManifest } from './lib/dataset-manifest.mjs';
+import { patchVersion, readManifest, updateManifest } from './lib/dataset-manifest.mjs';
+import { writeArchive } from './lib/dataset-archive.mjs';
 
 const DEFAULT_SOURCE = path.resolve('.cache', 'wow-ui-source');
 const DEFAULT_MANIFEST = path.resolve('data', 'manifest.json');
-const CANONICAL_GZIP_OS = 0x0a;
 
 function option(name, fallback) {
   const index = process.argv.indexOf(name);
@@ -80,20 +79,21 @@ async function main() {
     build: parsedVersion.build,
     commit,
     commitDate,
-  });
+  }, { includeResources: !process.argv.includes('--api-only'), allowPartialResources: process.argv.includes('--allow-partial-resources') });
   validateDataset(dataset);
 
-  const compressed = gzipSync(Buffer.from(`${JSON.stringify(dataset)}\n`), {
-    level: 9,
-    mtime: 0,
-  });
-  // zlib writes a platform-specific OS byte. Keep the initial archive value so
-  // Linux refreshes and local Windows builds produce identical gzip files.
-  compressed[9] = CANONICAL_GZIP_OS;
-  await mkdir(path.dirname(output), { recursive: true });
-  const temporary = `${output}.tmp`;
-  await writeFile(temporary, compressed);
-  await rename(temporary, output);
+  const previous = (await readManifest(manifestPath)).versions.find((entry) => entry.version === parsedVersion.version);
+  let resourceMetadata = {};
+  if (dataset.resources) {
+    const resourceFile = `resources/${parsedVersion.version}.json.gz`;
+    await writeArchive(path.join(path.dirname(manifestPath), resourceFile), { schemaVersion: 1, source: dataset.source, resources: dataset.resources });
+    resourceMetadata = { resourceFile, resourceCounts: dataset.resources.counts, resourceCoverage: dataset.resources.coverage.status };
+    delete dataset.resources;
+  } else if (previous?.commit === commit && previous.resourceFile) {
+    const { resourceFile, resourceCounts, resourceCoverage } = previous;
+    resourceMetadata = { resourceFile, resourceCounts, resourceCoverage };
+  }
+  const bytes = await writeArchive(output, dataset);
 
   await mkdir(path.dirname(manifestPath), { recursive: true });
   const relativeFile = path.relative(path.dirname(manifestPath), output).split(path.sep).join('/');
@@ -105,10 +105,10 @@ async function main() {
     commitDate,
     file: relativeFile,
     stats: dataset.stats,
-    resourceCounts: dataset.resources.counts,
+    ...resourceMetadata,
   });
 
-  console.log(JSON.stringify({ output, manifest: manifestPath, default: manifest.default, bytes: compressed.length, source: dataset.source, stats: dataset.stats }, null, 2));
+  console.log(JSON.stringify({ output, manifest: manifestPath, default: manifest.default, bytes, source: dataset.source, stats: dataset.stats, ...resourceMetadata }, null, 2));
 }
 
 main().catch((error) => {

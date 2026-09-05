@@ -54,7 +54,8 @@ export function formatResources(result, info) {
     ...entry,
     sourceUrl: `https://github.com/Gethe/wow-ui-source/blob/${info.commit}/${entry.sourceFile}#L${entry.sourceLine}`,
   }));
-  return `${header}Blizzard source inventory: declarations and references, not a runtime availability or safety guarantee. Parameter names do not establish types, optionality, or returns. CVar and atlas entries are usage references, not complete registries.\n\n${JSON.stringify({ ...result, entries }, null, 2)}`;
+  const partial = result.coverage?.status === 'partial' ? 'Partial source coverage: inspect coverage.issues. Missing results do not establish absence.\n\n' : '';
+  return `${header}${partial}Blizzard source inventory: declarations and references, not a runtime availability or safety guarantee. Parameter names do not establish types, optionality, or returns. CVar and atlas entries are usage references, not complete registries.\n\n${JSON.stringify({ ...result, entries }, null, 2)}`;
 }
 
 export function formatNamespace(namespace, result, info) {
@@ -69,7 +70,7 @@ export function formatVersions(entries) {
 }
 
 export function formatComparison(result) {
-  const lines = [`# API comparison: ${datasetLabel(result.from)} → ${datasetLabel(result.to)}`, ''];
+  const lines = [`# API comparison: ${datasetLabel(result.from)} → ${datasetLabel(result.to)}`, '', 'Changes describe the generated documentation catalog, not independently verified runtime introduction or removal. Use get_migration_guidance for separately sourced replacements.', ''];
   if (result.comparisons.length === 0) return `${lines.join('\n')}No exact matching entry exists in either version.`;
   for (const comparison of result.comparisons) {
     lines.push(`## ${comparison.identity}`, '', `Kind: ${comparison.entryKind}`, `Status: ${comparison.status}`);
@@ -83,6 +84,7 @@ export function formatVersionDiff(result) {
   const lines = [
     `# Version diff: ${datasetLabel(result.from)} → ${datasetLabel(result.to)}`,
     '',
+    'Changes describe generated documentation coverage; missing entries do not independently establish runtime removal.',
     `Changes: ${result.total} (added ${result.counts.added}, removed ${result.counts.removed}, changed ${result.counts.changed})`,
     '',
     ...result.changes.map((entry) => `- [${entry.status}] ${entry.entryKind}: ${entry.identity}`),
@@ -97,6 +99,7 @@ export function formatHistory(result) {
     `# API history: ${result.name}`,
     '',
     `Range: ${datasetLabel(result.from)} → ${datasetLabel(result.to)}`,
+    'Transitions describe generated documentation coverage, not independently verified runtime lifecycle.',
     '',
   ];
   if (result.transitions.length === 0) return `${lines.join('\n')}No history found.`;

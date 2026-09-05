@@ -1,5 +1,13 @@
 # Third-party notices
 
+## Warcraft Wiki curated documentation
+
+`data/curated/engine-apis.json` is adapted from Warcraft Wiki contributors under Creative Commons Attribution-ShareAlike 4.0. Each entry links its page revision and contributor history. See [the curated documentation notice](data/curated/LICENSE.md) for attribution, adaptation details, and the license. This data has its own license; the project's Apache-2.0 software license does not replace it.
+
+## Locally collected runtime observations
+
+The optional WoW API Snapshot collector is project-authored software. No Ketho/Wago runtime dump or localized-value collection is bundled. Importing a private snapshot does not assign it a redistribution license. Source mirrors and extraction tools do not themselves grant rights in Blizzard data; see the repository's feasibility audit for the unresolved provenance distinctions.
+
 ## Blizzard UI source mirror
 
 The bundled dataset is derived from generated World of Warcraft UI documentation and FrameXML published through [Gethe/wow-ui-source](https://github.com/Gethe/wow-ui-source). Gethe's repository is an automatically generated mirror of Blizzard UI source. World of Warcraft and Blizzard Entertainment are trademarks or registered trademarks of Blizzard Entertainment, Inc. This project is not affiliated with or endorsed by Blizzard Entertainment.

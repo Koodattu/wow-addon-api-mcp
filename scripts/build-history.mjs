@@ -1,5 +1,6 @@
 import { spawnSync } from 'node:child_process';
 import { existsSync } from 'node:fs';
+import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 
 import { compareVersions } from './lib/dataset-manifest.mjs';
@@ -52,7 +53,10 @@ async function main() {
 
   const from = argument('--from', '10.0.0');
   const to = argument('--to', '999.999.999');
-  const snapshots = canonicalSnapshots('FETCH_HEAD').filter((snapshot) => (
+  const candidates = process.argv.includes('--pinned')
+    ? JSON.parse(await readFile('data/manifest.json', 'utf8')).versions
+    : canonicalSnapshots('FETCH_HEAD');
+  const snapshots = candidates.filter((snapshot) => (
     compareVersions(snapshot.version, from) >= 0 && compareVersions(snapshot.version, to) <= 0
   ));
   if (snapshots.length === 0) throw new Error(`No versions found between ${from} and ${to}`);
@@ -66,6 +70,8 @@ async function main() {
         'scripts/build-dataset.mjs',
         '--source', worktreeRoot,
         '--client-version', `${snapshot.version}.${snapshot.build}`,
+        ...(process.argv.includes('--resources') ? [] : ['--api-only']),
+        ...(process.argv.includes('--allow-partial-resources') ? ['--allow-partial-resources'] : []),
       ], { stdio: 'inherit' });
     }
   } finally {

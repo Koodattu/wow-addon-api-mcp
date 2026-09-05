@@ -1,6 +1,6 @@
 {
   "name": "wow-addon-api-mcp",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Versioned, standalone MCP server for the World of Warcraft AddOn API",
   "type": "module",
   "bin": {
@@ -12,7 +12,10 @@
   "files": [
     "data/manifest.json",
     "data/retail/",
+    "data/resources/",
+    "data/curated/",
     "src/",
+    "tools/WowApiSnapshot/",
     "LICENSE",
     "README.md",
     "THIRD_PARTY_NOTICES.md"
@@ -57,6 +60,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "fengari": "0.1.5",
     "luaparse": "^0.3.1"
   }
 }

@@ -1,0 +1,7 @@
+## Interface: 120100
+## Title: WoW API Snapshot
+## Notes: Export selected API resource observations for a local MCP snapshot.
+## Version: 1
+Request.lua
+Collector.lua
+Export.lua

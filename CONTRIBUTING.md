@@ -17,7 +17,11 @@ Generated snapshots and `data/manifest.json` are committed intentionally. Do not
 
 `npm run data:update` refreshes only the current retail patch from Gethe's `live` branch. When Blizzard starts a new patch family, the build adds a new `data/retail/<patch>.json.gz` entry and makes it the manifest default. A later build in that patch replaces the same canonical snapshot.
 
-`npm run data:history` rebuilds every retained patch from the upstream Git history. Use `--from` and `--to` with `scripts/build-history.mjs` to limit the range during development. The command requires the official Gethe repository at `.cache/wow-ui-source` and temporarily checks out historical commits under `.cache/`.
+`npm run data:history` rebuilds API snapshots from upstream Git history. Use `--from` and `--to` to limit the range, and `--pinned` to retain manifest commits instead of selecting newer patch commits. The command requires the Gethe repository at `.cache/wow-ui-source` and temporarily checks out historical commits under `.cache/`.
+
+Add `--resources` to history builds to generate separate resource archives. Historical missing/ambiguous includes require `--allow-partial-resources`, which records explicit coverage issues. Strict extraction remains the default for current refreshes. A direct `build-dataset.mjs --api-only` build avoids supplementary extraction and preserves existing resource metadata only for the same source commit. API and resource archives must agree on source provenance.
+
+Curated contracts in `data/curated/` require immutable source revisions, attribution, a documented license, and an explicitly reviewed client build. Do not extend applicability automatically during a refresh. Keep runtime observations separate from contracts and never infer API removal solely from absence in generated documentation. See [validation scope](docs/VALIDATION.md) before claiming game-client compatibility.
 
 Keep transformations lossless unless a field is only structural. New Blizzard metadata should remain visible in the normalized entry's `metadata`, argument, return, payload, or field object. Add a focused regression test when an upstream schema change requires parser work.
 

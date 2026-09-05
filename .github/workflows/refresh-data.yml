@@ -34,7 +34,7 @@ jobs:
       - id: changed
         shell: bash
         run: |
-          if [ -z "$(git status --porcelain -- data/manifest.json data/retail)" ]; then
+          if [ -z "$(git status --porcelain -- data/manifest.json data/retail data/resources)" ]; then
             echo "value=false" >> "$GITHUB_OUTPUT"
           else
             echo "value=true" >> "$GITHUB_OUTPUT"
@@ -68,6 +68,7 @@ jobs:
           add-paths: |
             data/manifest.json
             data/retail
+            data/resources
             package.json
             package-lock.json
       - name: Run required CI for refresh pull request

@@ -29,6 +29,21 @@ test('serves the bundled docs over MCP stdio', { timeout: 20_000 }, async () => 
     assert.ok(tools.tools.some((tool) => tool.name === 'get_api_history'));
     assert.ok(tools.tools.some((tool) => tool.name === 'lookup_resource'));
     assert.ok(tools.tools.some((tool) => tool.name === 'search_resources'));
+    assert.ok(tools.tools.some((tool) => tool.name === 'lookup_engine_api'));
+    assert.ok(tools.tools.some((tool) => tool.name === 'get_migration_guidance'));
+    assert.ok(tools.tools.some((tool) => tool.name === 'lookup_runtime_resource'));
+
+    const curated = JSON.parse(await readFile(new URL('../data/curated/engine-apis.json', import.meta.url), 'utf8'));
+    const engine = await client.callTool({ name: 'lookup_engine_api', arguments: { name: 'CreateFrame' } });
+    assert.equal(JSON.parse(engine.content[0].text.split('\n\n')[1]).available, current.clientVersion === curated.reviewedClientVersion);
+    const scenarios = JSON.parse(await readFile(new URL('fixtures/addon-scenarios.json', import.meta.url), 'utf8'));
+    for (const scenario of scenarios) {
+      for (const call of scenario.calls) {
+        const response = await client.callTool({ name: call.name, arguments: call.arguments });
+        assert.ok(!response.isError, scenario.task);
+        for (const expected of call.contains) assert.ok(response.content[0].text.includes(expected), `${scenario.task}: ${expected}`);
+      }
+    }
 
     const result = await client.callTool({
       name: 'lookup_api',

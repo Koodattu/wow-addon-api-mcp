@@ -5,6 +5,7 @@ import path from 'node:path';
 import test from 'node:test';
 
 import { extractFrameXmlResources, parseResourceLua, parseResourceXml } from '../scripts/lib/framexml-resources.mjs';
+import { normalizeSourceEscapes } from '../scripts/lib/lua-doc-parser.mjs';
 import { loadCatalog, WowApiStore } from '../src/data-store.mjs';
 import { formatMatches, formatResources } from '../src/formatters.mjs';
 import { compareApi, apiHistory } from '../src/version-tools.mjs';
@@ -43,6 +44,18 @@ test('extracts Lua definitions and references without inventing signatures or ex
   assert.ok(entries.some((entry) => entry.kind === 'atlas' && entry.name === 'test-atlas'));
   assert.deepEqual(entries.find((entry) => entry.kind === 'mixin' && entry.name === 'TextSizeManager').metadata.parents, ['TextSizeManagerBase']);
   assert.equal(entries.find((entry) => entry.name === 'QueueUpdater' && entry.sourceKind === 'framexml-definition').metadata.mixinApplication, true);
+});
+
+test('accepts legacy escapes with modern statements without rewriting comments or long strings', () => {
+  const source = String.raw`-- "leave\|comment"
+local long = [=[leave\|long]=]
+local quoted = "leave\\|literal"
+while true do break; end
+SetCVar("test\|name", "x")`;
+  assert.ok(normalizeSourceEscapes(source).includes(String.raw`[=[leave\|long]=]`));
+  assert.ok(normalizeSourceEscapes(source).includes(String.raw`-- "leave\|comment"`));
+  assert.ok(normalizeSourceEscapes(source).includes(String.raw`"leave\\|literal"`));
+  assert.ok(parseResourceLua(source, 'legacy.lua').some((entry) => entry.kind === 'cvar' && entry.name === 'test|name'));
 });
 
 test('keeps nested XML templates, dynamic children, and client conditions distinct', () => {
@@ -107,19 +120,28 @@ test('selects mainline TOCs and resolves both source include conventions determi
   assert.ok(first.entries.some((entry) => entry.name === 'ExampleMixin'));
   assert.ok(first.entries.some((entry) => entry.sourceFile === 'Interface/AddOns/Example/Mainline/Sibling.lua'));
   assert.ok(first.entries.every((entry) => entry.addon === 'Example'));
+  await writeFile(path.join(addon, 'Standard.lua'), 'function Broken(');
+  await writeFile(path.join(addon, 'Mainline/UI.xml'), '<Ui><Script file="Missing.lua"/></Ui>');
+  await assert.rejects(extractFrameXmlResources(root, tocs), /Missing source include/);
+  const partial = await extractFrameXmlResources(root, tocs, { allowPartial: true });
+  assert.equal(partial.coverage.status, 'partial');
+  assert.equal(partial.coverage.issues.length, 2);
+  assert.ok(partial.coverage.issues.some((issue) => issue.message.includes('Missing.lua')));
 });
 
 test('resource lookup reports coverage and pagination without contaminating API contracts', async () => {
   const catalog = await loadCatalog();
   const store = await catalog.store();
-  const template = store.resources('SecureActionButtonTemplate', { kind: 'template', exact: true });
+  assert.equal(store.dataset.resources, undefined);
+  assert.equal(catalog.resourceCache.size, 0);
+  const template = await catalog.lookupResources('SecureActionButtonTemplate', { kind: 'template', exact: true });
   assert.equal(template.available, true);
   assert.deepEqual(template.entries[0].metadata.inheritedTemplates, ['SecureFrameTemplate']);
   assert.equal(store.lookup('SecureActionButtonTemplate').length, 0);
-  const references = store.resources('CreateFrame', { exact: true, limit: 1 });
+  const references = await catalog.lookupResources('CreateFrame', { exact: true, limit: 1 });
   assert.equal(references.entries[0].sourceKind, 'framexml-reference');
   assert.equal(references.nextOffset, 1);
-  const next = store.resources('CreateFrame', { exact: true, limit: 1, offset: 1 });
+  const next = await catalog.lookupResources('CreateFrame', { exact: true, limit: 1, offset: 1 });
   assert.notDeepEqual(next.entries, references.entries);
   assert.equal(next.total, references.total);
   assert.ok(formatResources(references, catalog.entry()).includes('/blob/' + catalog.entry().commit + '/'));

@@ -27,7 +27,7 @@ jobs:
       - name: Resolve pinned Blizzard source
         if: matrix.node == 24
         id: source
-        run: node -e "const m=require('./data/manifest.json');console.log('commit='+m.versions.find(v=>v.version===m.default).commit)" >> "$GITHUB_OUTPUT"
+        run: node -e "const m=require('./data/manifest.json');console.log('commit='+m.versions.find(v=>v.version===m.default).commit);console.log('old_commit='+m.versions[0].commit);console.log('old_version='+m.versions[0].clientVersion)" >> "$GITHUB_OUTPUT"
       - uses: actions/checkout@v7
         if: matrix.node == 24
         with:
@@ -55,6 +55,24 @@ jobs:
               firstDifference: at, before: left.slice(at - 100, at + 200), after: right.slice(at - 100, at + 200) });
           }
           NODE
-          git diff --exit-code -- data/manifest.json data/retail
+          git diff --exit-code -- data/manifest.json data/retail data/resources
+      - uses: actions/checkout@v7
+        if: matrix.node == 24
+        with:
+          repository: Gethe/wow-ui-source
+          ref: ${{ steps.source.outputs.old_commit }}
+          path: .cache/wow-ui-oldest
+      - name: Verify oldest API and partial resource rebuilds
+        if: matrix.node == 24
+        run: |
+          node scripts/build-dataset.mjs --source .cache/wow-ui-oldest --client-version '${{ steps.source.outputs.old_version }}' --api-only --manifest .cache/api-check/manifest.json --output .cache/api-check/snapshot.json.gz
+          node scripts/build-dataset.mjs --source .cache/wow-ui-oldest --client-version '${{ steps.source.outputs.old_version }}' --allow-partial-resources --manifest .cache/resource-check/manifest.json --output .cache/resource-check/snapshot.json.gz
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import { readFileSync } from 'node:fs';
+          const entry = JSON.parse(readFileSync('data/manifest.json', 'utf8')).versions[0];
+          assert.ok(readFileSync('data/' + entry.file).equals(readFileSync('.cache/api-check/snapshot.json.gz')), 'Historical API archive drift');
+          assert.ok(readFileSync('data/' + entry.resourceFile).equals(readFileSync('.cache/resource-check/' + entry.resourceFile)), 'Historical resource archive drift');
+          NODE
       - if: matrix.node == 24
         run: npm run pack:check
