@@ -3,23 +3,25 @@ import { readdirSync } from 'node:fs';
 import path from 'node:path';
 
 import { evaluateNode, memberName, parseLuaSource } from './lua-doc-parser.mjs';
+import { channelProfile } from '../../src/channels.mjs';
 
 const words = (value = '') => value.toLowerCase().split(/[\s,]+/).filter(Boolean);
-const retail = (value) => words(value).some((word) => word === 'mainline' || word === 'standard');
 
 export function parseAttributes(source) {
   return Object.fromEntries([...source.matchAll(/([\w:.-]+)\s*=\s*(?:"([^"]*)"|'([^']*)')/g)]
     .map((match) => [match[1], match[2] ?? match[3]]));
 }
 
-function allowed(attributes) {
+function allowed(attributes, channel = 'retail') {
+  const { family, game } = channelProfile(channel);
+  const matches = (value) => words(value).some((word) => word === family.toLowerCase() || word === game.toLowerCase());
   const lower = Object.fromEntries(Object.entries(attributes).map(([key, value]) => [key.toLowerCase(), value]));
-  return (!lower.allowloadgametype || retail(lower.allowloadgametype))
-    && (!lower.excludeloadgametype || !retail(lower.excludeloadgametype))
+  return (!lower.allowloadgametype || matches(lower.allowloadgametype))
+    && (!lower.excludeloadgametype || !matches(lower.excludeloadgametype))
     && (!lower.allowload || words(lower.allowload).some((word) => word === 'game' || word === 'both'));
 }
 
-export function parseResourceXml(source) {
+export function parseResourceXml(source, { channel = 'retail' } = {}) {
   const cleaned = source.replace(/<!--[\s\S]*?-->|<!\[CDATA\[[\s\S]*?\]\]>/g, (text) => text.replace(/[^\n]/g, ' '));
   const entries = [];
   const includes = [];
@@ -33,7 +35,7 @@ export function parseResourceXml(source) {
     }
     const attributes = parseAttributes(match[3]);
     const parent = stack.at(-1);
-    const enabled = (parent?.enabled ?? true) && allowed(attributes);
+    const enabled = (parent?.enabled ?? true) && allowed(attributes, channel);
     const inTemplate = (parent?.inTemplate ?? false) || attributes.virtual === 'true';
     const line = cleaned.slice(0, match.index).split('\n').length;
     if (enabled) {
@@ -139,7 +141,8 @@ export function parseResourceLua(source, filename) {
   return entries;
 }
 
-export async function extractFrameXmlResources(sourceRoot, tocFiles, { allowPartial = false } = {}) {
+export async function extractFrameXmlResources(sourceRoot, tocFiles, { allowPartial = false, channel = 'retail' } = {}) {
+  const { family, game } = channelProfile(channel);
   const files = new Map();
   const entries = [];
   const excluded = [];
@@ -168,8 +171,8 @@ export async function extractFrameXmlResources(sourceRoot, tocFiles, { allowPart
   const paths = new Set(tocFiles);
   const selected = tocFiles.filter((file) => {
     const addon = path.basename(path.dirname(file));
-    return path.basename(file) === addon + '_Mainline.toc'
-      || (path.basename(file) === addon + '.toc' && !paths.has(path.join(path.dirname(file), addon + '_Mainline.toc')));
+    return path.basename(file) === addon + `_${family}.toc`
+      || (path.basename(file) === addon + '.toc' && !paths.has(path.join(path.dirname(file), addon + `_${family}.toc`)));
   }).sort((a, b) => relative(a) < relative(b) ? -1 : relative(a) > relative(b) ? 1 : 0);
 
   async function include(file, addon) {
@@ -184,7 +187,7 @@ export async function extractFrameXmlResources(sourceRoot, tocFiles, { allowPart
     const source = await readFile(file, 'utf8');
     let parsed;
     try {
-      parsed = file.endsWith('.xml') ? parseResourceXml(source) : parseResourceLua(source, sourceFile);
+      parsed = file.endsWith('.xml') ? parseResourceXml(source, { channel }) : parseResourceLua(source, sourceFile);
     } catch (error) {
       incomplete(sourceFile, error.message);
       return;
@@ -199,7 +202,7 @@ export async function extractFrameXmlResources(sourceRoot, tocFiles, { allowPart
   }
 
   function resolveInclude(from, target, addon) {
-    const replaced = target.replaceAll('[Family]', 'Mainline').replaceAll('[Game]', 'Standard').replaceAll('\\', '/');
+    const replaced = target.replaceAll('[Family]', family).replaceAll('[Game]', game).replaceAll('\\', '/');
     if (/^Interface\//i.test(replaced)) {
       const file = sourcePath(path.resolve(sourceRoot, replaced));
       if (!file) return incomplete(relative(from), 'Missing source include: ' + relative(from) + ' -> ' + target);
@@ -218,9 +221,9 @@ export async function extractFrameXmlResources(sourceRoot, tocFiles, { allowPart
   for (const toc of selected) {
     if (relative(toc).includes('/Blizzard_APIDocumentation')) continue;
     const source = await readFile(toc, 'utf8');
-    const headers = Object.fromEntries([...source.matchAll(/^##\s*(AllowLoad(?:GameType)?):\s*(.*)$/gmi)]
+    const headers = Object.fromEntries([...source.matchAll(/^##\s*(AllowLoad(?:GameType)?|ExcludeLoadGameType):\s*(.*)$/gmi)]
       .map((match) => [match[1], match[2].trim()]));
-    if (!allowed(headers) || relative(toc).startsWith('Interface/GlueXML/')) {
+    if (!allowed(headers, channel) || relative(toc).startsWith('Interface/GlueXML/')) {
       excluded.push(relative(toc));
       continue;
     }
@@ -229,7 +232,7 @@ export async function extractFrameXmlResources(sourceRoot, tocFiles, { allowPart
       if (!raw.trim() || raw.trim().startsWith('#')) continue;
       const conditions = Object.fromEntries([...raw.matchAll(/\[(AllowLoad(?:GameType)?|ExcludeLoadGameType)\s+([^\]]+)\]/gi)]
         .map((match) => [match[1], match[2]]));
-      if (!allowed(conditions)) continue;
+      if (!allowed(conditions, channel)) continue;
       const target = raw.replace(/\[(?!Family\]|Game\])[^\]]+\]/g, '').trim();
       if (target) await include(resolveInclude(toc, target, addon), addon);
     }
@@ -245,7 +248,7 @@ export async function extractFrameXmlResources(sourceRoot, tocFiles, { allowPart
     || a.name.localeCompare(b.name) || a.sourceFile.localeCompare(b.sourceFile) || a.sourceLine - b.sourceLine);
   return {
     schemaVersion: 1,
-    scope: 'mainline-source',
+    scope: channel === 'retail' ? 'mainline-source' : 'forever-source',
     coverage: { status: issues.length ? 'partial' : 'complete', files: files.size, parsedFiles, excludedAddOns: excluded, issues },
     counts: Object.fromEntries(['symbol', 'template', 'mixin', 'frame', 'cvar', 'atlas']
       .map((kind) => [kind, new Set(sorted.filter((entry) => entry.kind === kind).map((entry) => entry.name)).size])),

@@ -4,8 +4,8 @@ import { readFile } from 'node:fs/promises';
 import { gunzipSync } from 'node:zlib';
 import { loadCatalog } from '../src/data-store.mjs';
 
-test('every historical resource archive matches its API snapshot and reports exact coverage', async () => {
-  const catalog = await loadCatalog();
+for (const channel of ['retail', 'forever']) test(`every ${channel} resource archive matches its API snapshot and reports exact coverage`, async () => {
+  const catalog = await loadCatalog(undefined, { channel });
   for (const entry of catalog.listVersions()) {
     assert.ok(entry.resourceFile, entry.version);
     const archive = await readFile(catalog.datasetPath({ file: entry.resourceFile }));
@@ -13,6 +13,7 @@ test('every historical resource archive matches its API snapshot and reports exa
     const { source, resources } = JSON.parse(gunzipSync(archive));
     assert.equal(source.commit, entry.commit);
     assert.equal(source.version, entry.clientVersion);
+    assert.equal(source.channel ?? 'retail', channel);
     assert.deepEqual(resources.counts, entry.resourceCounts);
     assert.equal(resources.coverage.status, entry.resourceCoverage);
     assert.equal(resources.coverage.issues.length === 0, entry.resourceCoverage === 'complete');

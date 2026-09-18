@@ -4,9 +4,12 @@ import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 
 import { compareVersions } from './lib/dataset-manifest.mjs';
+import { channelManifest, channelProfile, matchesChannel } from '../src/channels.mjs';
 
-const sourceRoot = path.resolve('.cache', 'wow-ui-source');
-const worktreeRoot = path.resolve('.cache', 'wow-ui-history');
+const channel = argument('--channel', 'retail');
+const { branch } = channelProfile(channel);
+const sourceRoot = path.resolve('.cache', channel === 'retail' ? 'wow-ui-source' : 'wow-ui-forever');
+const worktreeRoot = path.resolve('.cache', channel === 'retail' ? 'wow-ui-history' : 'wow-ui-forever-history');
 const repository = 'https://github.com/Gethe/wow-ui-source';
 
 function run(command, args, options = {}) {
@@ -33,7 +36,7 @@ function canonicalSnapshots(ref) {
   for (const line of lines) {
     const [commit, commitDate, subject] = line.split('\t');
     const match = /^(\d+\.\d+\.\d+) \((\d+)\)$/.exec(subject);
-    if (!match || snapshots.has(match[1])) continue;
+    if (!match || !matchesChannel(match[1], channel) || snapshots.has(match[1])) continue;
     snapshots.set(match[1], { version: match[1], build: match[2], commit, commitDate });
   }
   return [...snapshots.values()].sort((left, right) => compareVersions(left.version, right.version));
@@ -46,15 +49,15 @@ async function main() {
   if (origin !== repository) throw new Error(`Unexpected source origin: ${origin}`);
 
   if (git(sourceRoot, 'rev-parse', '--is-shallow-repository') === 'true') {
-    run('git', ['-c', `safe.directory=${sourceRoot.replaceAll('\\', '/')}`, '-C', sourceRoot, 'fetch', '--unshallow', '--filter=blob:none', 'origin', 'live'], { stdio: 'inherit' });
+    run('git', ['-c', `safe.directory=${sourceRoot.replaceAll('\\', '/')}`, '-C', sourceRoot, 'fetch', '--unshallow', '--filter=blob:none', 'origin', branch], { stdio: 'inherit' });
   } else {
-    run('git', ['-c', `safe.directory=${sourceRoot.replaceAll('\\', '/')}`, '-C', sourceRoot, 'fetch', '--filter=blob:none', 'origin', 'live'], { stdio: 'inherit' });
+    run('git', ['-c', `safe.directory=${sourceRoot.replaceAll('\\', '/')}`, '-C', sourceRoot, 'fetch', '--filter=blob:none', 'origin', branch], { stdio: 'inherit' });
   }
 
-  const from = argument('--from', '10.0.0');
+  const from = argument('--from', channel === 'retail' ? '10.0.0' : '1.60.0');
   const to = argument('--to', '999.999.999');
   const candidates = process.argv.includes('--pinned')
-    ? JSON.parse(await readFile('data/manifest.json', 'utf8')).versions
+    ? JSON.parse(await readFile(channelManifest(channel), 'utf8')).versions
     : canonicalSnapshots('FETCH_HEAD');
   const snapshots = candidates.filter((snapshot) => (
     compareVersions(snapshot.version, from) >= 0 && compareVersions(snapshot.version, to) <= 0
@@ -65,9 +68,10 @@ async function main() {
     git(sourceRoot, 'worktree', 'add', '--detach', worktreeRoot, snapshots[0].commit);
     for (const [index, snapshot] of snapshots.entries()) {
       if (index > 0) git(worktreeRoot, 'checkout', '--detach', snapshot.commit);
-      console.log(`\n[${index + 1}/${snapshots.length}] Building retail ${snapshot.version} (${snapshot.build})`);
+      console.log(`\n[${index + 1}/${snapshots.length}] Building ${channel} ${snapshot.version} (${snapshot.build})`);
       run(process.execPath, [
         'scripts/build-dataset.mjs',
+        '--channel', channel,
         '--source', worktreeRoot,
         '--client-version', `${snapshot.version}.${snapshot.build}`,
         ...(process.argv.includes('--resources') ? [] : ['--api-only']),

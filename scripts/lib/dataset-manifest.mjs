@@ -1,4 +1,5 @@
 import { readFile, rename, writeFile } from 'node:fs/promises';
+import { channelProfile, matchesChannel } from '../../src/channels.mjs';
 
 export function patchVersion(clientVersion) {
   const match = /^(\d+\.\d+\.\d+)(?:\.(\d+))?$/.exec(clientVersion.trim());
@@ -15,25 +16,28 @@ export function compareVersions(left, right) {
   return 0;
 }
 
-export async function readManifest(manifestPath) {
+export async function readManifest(manifestPath, channel = 'retail') {
   try {
     return JSON.parse(await readFile(manifestPath, 'utf8'));
   } catch (error) {
     if (error.code !== 'ENOENT') throw error;
-    return { schemaVersion: 1, channel: 'retail', default: null, versions: [] };
+    return { schemaVersion: 1, channel, default: null, versions: [] };
   }
 }
 
-export async function updateManifest(manifestPath, entry) {
-  const manifest = await readManifest(manifestPath);
+export async function updateManifest(manifestPath, entry, channel = 'retail') {
+  channelProfile(channel);
+  if (!matchesChannel(entry.clientVersion, channel)) throw new Error(`Client version ${entry.clientVersion} does not belong to ${channel}`);
+  const manifest = await readManifest(manifestPath, channel);
   if (manifest.schemaVersion !== 1) throw new Error(`Unsupported manifest schema: ${manifest.schemaVersion}`);
+  if (manifest.channel !== channel) throw new Error(`Cannot write ${channel} data into a ${manifest.channel} manifest`);
 
   const versions = manifest.versions.filter((candidate) => candidate.version !== entry.version);
   versions.push(entry);
   versions.sort((left, right) => compareVersions(left.version, right.version));
   const updated = {
     schemaVersion: 1,
-    channel: 'retail',
+    channel,
     default: versions.at(-1).version,
     versions,
   };

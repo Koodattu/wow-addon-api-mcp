@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "channel": "forever",
+  "default": "1.60.1",
+  "versions": [
+    {
+      "version": "1.60.1",
+      "clientVersion": "1.60.1.69913",
+      "build": "69913",
+      "commit": "70ef1b2fd78061a73f886c4a1e79dc5b5cff6d5e",
+      "commitDate": "2026-09-18T03:16:08Z",
+      "file": "snapshots/1.60.1.json.gz",
+      "stats": {
+        "systems": 638,
+        "functions": 5100,
+        "methods": 1487,
+        "events": 1802,
+        "enumerations": 887,
+        "structures": 851,
+        "widgets": 93
+      },
+      "resourceFile": "resources/1.60.1.json.gz",
+      "resourceCounts": {
+        "symbol": 53928,
+        "template": 3269,
+        "mixin": 3021,
+        "frame": 2427,
+        "cvar": 286,
+        "atlas": 2552
+      },
+      "resourceCoverage": "partial"
+    }
+  ]
+}

@@ -9,7 +9,7 @@ export async function loadCuratedData() {
 export function curatedLookup(data, name, info, { migration = false } = {}) {
   const records = migration ? data.migrations : data.entries;
   const entry = records.find((record) => record.name === name.trim());
-  const available = Boolean(entry && data.reviewedClientVersion === info.clientVersion);
+  const available = Boolean(entry && (info.channel ?? 'retail') === 'retail' && data.reviewedClientVersion === info.clientVersion);
   return {
     available, sourceKind: data.sourceKind, reviewedClientVersion: data.reviewedClientVersion,
     selectedClientVersion: info.clientVersion, license: data.license, licenseUrl: data.licenseUrl,

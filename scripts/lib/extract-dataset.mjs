@@ -296,7 +296,7 @@ export async function extractDataset(sourceRoot, source, { includeResources = tr
     schemaVersion: 1,
     source,
     ...(includeResources ? { resources: await extractFrameXmlResources(sourceRoot,
-      await walkFiles(path.join(sourceRoot, 'Interface'), '.toc'), { allowPartial: allowPartialResources }) } : {}),
+      await walkFiles(path.join(sourceRoot, 'Interface'), '.toc'), { allowPartial: allowPartialResources, channel: source.channel ?? 'retail' }) } : {}),
     stats: {
       systems: normalizedSystems.length,
       functions: normalizedFunctions.filter((entry) => entry.kind === 'function').length,
