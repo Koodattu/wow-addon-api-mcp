@@ -4,7 +4,7 @@ import { readFile, mkdtemp, writeFile, rm } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { lua, lauxlib, lualib, to_luastring, to_jsstring } from 'fengari';
-import { loadRuntimeData, runtimeLookup, runtimeSchema } from '../src/runtime-data.mjs';
+import { loadRuntimeData, loadRuntimeSnapshots, runtimeLookup, runtimeSchema } from '../src/runtime-data.mjs';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
 import { channelManifest } from '../src/channels.mjs';
@@ -129,5 +129,57 @@ for (const channel of ['retail', 'forever']) test(`${channel} CLI serves a colle
     assert.equal((await query({ name: 'failed', kind: 'cvar', version: current.version })).failed, true);
     if (channel === 'retail') assert.equal((await query({ name: 'example', kind: 'cvar', version: '10.0.0' })).available, false);
     assert.equal((await query({ name: 'EXAMPLE_LOCALIZED', kind: 'globalstring', version: current.version, locale: 'deDE' })).available, false);
+  } finally { await client.close(); }
+});
+
+test('one MCP process routes multiple runtime files by channel/build and requires a locale when ambiguous', async (t) => {
+  const directory = await mkdtemp(path.join(os.tmpdir(), 'wow-multi-runtime-'));
+  t.after(() => rm(directory, { recursive: true, force: true }));
+  const files = [];
+  const entries = {};
+  for (const channel of ['retail', 'forever']) {
+    const manifest = JSON.parse(await readFile(channelManifest(channel), 'utf8'));
+    const current = manifest.versions.find((entry) => entry.version === manifest.default);
+    entries[channel] = { ...current, channel };
+    const snapshot = JSON.parse(collect('{cvars={"example"}, atlases={}, symbols={}, globalStrings={}}'));
+    snapshot.source.channel = channel;
+    snapshot.source.clientVersion = current.clientVersion;
+    snapshot.source.interfaceVersion = channel === 'forever' ? 16001 : 120100;
+    snapshot.records.cvars[0].defaultValue = channel;
+    const file = path.join(directory, channel + '.json');
+    await writeFile(file, JSON.stringify(snapshot));
+    files.push(file);
+  }
+  const snapshots = await loadRuntimeSnapshots(files);
+  assert.equal(runtimeLookup(snapshots, 'example', 'cvar', entries.retail).entry.defaultValue, 'retail');
+  assert.equal(runtimeLookup(snapshots, 'example', 'cvar', entries.forever).entry.defaultValue, 'forever');
+  assert.equal(runtimeLookup(snapshots, 'example', 'cvar', { ...entries.forever, clientVersion: '1.60.1.1' }).available, false);
+  await assert.rejects(loadRuntimeSnapshots([files[0], files[0]]), /Duplicate runtime snapshot/);
+  const german = structuredClone(snapshots[1]);
+  german.source.locale = 'deDE';
+  german.records.cvars[0].defaultValue = 'forever-de';
+  const germanFile = path.join(directory, 'forever-de.json');
+  await writeFile(germanFile, JSON.stringify(german));
+  files.push(germanFile);
+  const localized = await loadRuntimeSnapshots(files);
+  assert.match(runtimeLookup(localized, 'example', 'cvar', entries.forever).reason, /Specify locale/);
+  assert.equal(runtimeLookup(localized, 'example', 'cvar', entries.forever, 'deDE').entry.defaultValue, 'forever-de');
+  const client = new Client({ name: 'multi-runtime-integration', version: '1' });
+  try {
+    await client.connect(new StdioClientTransport({ command: process.execPath,
+      args: ['src/cli.mjs', ...files.flatMap((file) => ['--runtime-data', file])], cwd: process.cwd(), stderr: 'pipe' }));
+    const query = async (channel, locale) => {
+      const result = await client.callTool({ name: 'lookup_runtime_resource', arguments: {
+        name: 'example', kind: 'cvar', channel, version: entries[channel].clientVersion, ...(locale ? { locale } : {}),
+      } });
+      assert.ok(!result.isError);
+      return JSON.parse(result.content[0].text.split('\n\n')[1]);
+    };
+    const [retailResult, foreverResult] = await Promise.all([query('retail'), query('forever', 'enUS')]);
+    assert.equal(retailResult.entry.defaultValue, 'retail');
+    assert.equal(foreverResult.entry.defaultValue, 'forever');
+    assert.equal((await query('forever')).available, false);
+    assert.equal((await query('forever', 'deDE')).entry.defaultValue, 'forever-de');
+    assert.equal((await query('forever', 'frFR')).available, false);
   } finally { await client.close(); }
 });

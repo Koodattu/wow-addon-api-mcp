@@ -26,10 +26,10 @@ function entryMap(store, kind, namespace) {
     .map((entry) => [`${entryKind}\0${entryIdentity(entryKind, entry)}`, { entryKind, entry }])));
 }
 
-export async function compareApi(catalog, name, fromVersion, toVersion, kind) {
+export async function compareApi(catalog, name, fromVersion, toVersion, kind, toCatalog = catalog) {
   const from = catalog.entry(fromVersion);
-  const to = catalog.entry(toVersion);
-  const [fromStore, toStore] = await Promise.all([catalog.store(from.version), catalog.store(to.version)]);
+  const to = toCatalog.entry(toVersion);
+  const [fromStore, toStore] = await Promise.all([catalog.store(from.version), toCatalog.store(to.version)]);
   const before = new Map(fromStore.lookup(name, kind, { allowShortNames: false }).map((match) => [`${match.entryKind}\0${entryIdentity(match.entryKind, match.entry)}`, match]));
   const after = new Map(toStore.lookup(name, kind, { allowShortNames: false }).map((match) => [`${match.entryKind}\0${entryIdentity(match.entryKind, match.entry)}`, match]));
   const keys = [...new Set([...before.keys(), ...after.keys()])].sort();
@@ -46,10 +46,10 @@ export async function compareApi(catalog, name, fromVersion, toVersion, kind) {
   };
 }
 
-export async function diffVersions(catalog, fromVersion, toVersion, { kind, namespace, change = 'all', limit = 50 } = {}) {
+export async function diffVersions(catalog, fromVersion, toVersion, { kind, namespace, change = 'all', limit = 50, toCatalog = catalog } = {}) {
   const from = catalog.entry(fromVersion);
-  const to = catalog.entry(toVersion);
-  const [fromStore, toStore] = await Promise.all([catalog.store(from.version), catalog.store(to.version)]);
+  const to = toCatalog.entry(toVersion);
+  const [fromStore, toStore] = await Promise.all([catalog.store(from.version), toCatalog.store(to.version)]);
   const before = entryMap(fromStore, kind, namespace);
   const after = entryMap(toStore, kind, namespace);
   const keys = [...new Set([...before.keys(), ...after.keys()])].sort();
