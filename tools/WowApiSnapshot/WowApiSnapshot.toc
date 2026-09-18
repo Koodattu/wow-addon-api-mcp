@@ -1,4 +1,4 @@
-## Interface: 120100
+## Interface: 120100, 16001
 ## Title: WoW API Snapshot
 ## Notes: Export selected API resource observations for a local MCP snapshot.
 ## Version: 1

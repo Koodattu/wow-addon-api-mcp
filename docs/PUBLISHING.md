@@ -36,7 +36,7 @@ In GitHub Actions settings, allow workflows to create and approve pull requests.
 
 ## Release flow
 
-1. The refresh workflow checks Gethe's `live` branch every six hours.
+1. The refresh workflow checks Gethe's `live` and `forever` branches every six hours, maintaining separate Retail and Forever catalogs.
 2. A changed deterministic dataset is tested and submitted with a patch version bump.
 3. A maintainer reviews and merges the pull request.
 4. `publish.yml` re-tests the exact merge commit, publishes the new npm version, and creates the matching GitHub release.

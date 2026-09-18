@@ -7,14 +7,15 @@ import { lua, lauxlib, lualib, to_luastring, to_jsstring } from 'fengari';
 import { loadRuntimeData, runtimeLookup, runtimeSchema } from '../src/runtime-data.mjs';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
+import { channelManifest } from '../src/channels.mjs';
 
 const source = await readFile(new URL('../tools/WowApiSnapshot/Collector.lua', import.meta.url), 'utf8');
-function collect(request) {
+function collect(request, version = '12.1.0', build = '69587', interfaceVersion = 120100) {
   const state = lauxlib.luaL_newstate();
   lualib.luaL_openlibs(state);
   const script = String.raw`
     WOW_PROJECT_ID, WOW_PROJECT_MAINLINE = 1, 1
-    function GetBuildInfo() return "12.1.0", "69587", "Aug 27 2026", 120100 end
+    function GetBuildInfo() return "${version}", "${build}", "Aug 27 2026", ${interfaceVersion} end
     function GetLocale() return "enUS" end
     function date() return "2026-09-05T15:00:00Z" end
     C_CVar = { GetCVarInfo = function(name)
@@ -68,6 +69,17 @@ test('empty collector arrays remain arrays and invalid requests fail', () => {
   assert.throws(() => collect('{cvars={}, atlases={}, symbols={}, globalStrings={"playerName"}}'), /uppercase/);
 });
 
+test('Forever collector and runtime schema preserve channel identity and reject cross-channel observations', () => {
+  const request = '{cvars={"example"}, atlases={}, symbols={}, globalStrings={}}';
+  const snapshot = runtimeSchema.parse(JSON.parse(collect(request, '1.60.1', '69913', 16001)));
+  assert.equal(snapshot.source.channel, 'forever');
+  const info = { channel: 'forever', clientVersion: '1.60.1.69913' };
+  assert.equal(runtimeLookup(snapshot, 'example', 'cvar', info).entry.defaultValue, '1');
+  assert.equal(runtimeLookup(snapshot, 'example', 'cvar', { ...info, channel: 'retail' }).available, false);
+  assert.equal(runtimeSchema.safeParse({ ...snapshot, source: { ...snapshot.source, channel: 'retail' } }).success, false);
+  assert.throws(() => collect(request, '1.15.9', '69722', 11509), /supported Retail or Forever/);
+});
+
 test('runtime JSON rejects current values, unrequested entries, duplicates and executable input', async (t) => {
   const directory = await mkdtemp(path.join(os.tmpdir(), 'wow-runtime-test-'));
   t.after(() => rm(directory, { recursive: true, force: true }));
@@ -91,18 +103,20 @@ test('runtime JSON rejects current values, unrequested entries, duplicates and e
   await assert.rejects(loadRuntimeData(file), /data-only JSON/);
 });
 
-test('CLI serves a collector snapshot over MCP with build and locale gates', async (t) => {
+for (const channel of ['retail', 'forever']) test(`${channel} CLI serves a collector snapshot over MCP with build and locale gates`, async (t) => {
   const directory = await mkdtemp(path.join(os.tmpdir(), 'wow-runtime-stdio-'));
   t.after(() => rm(directory, { recursive: true, force: true }));
   const file = path.join(directory, 'snapshot.json');
-  const manifest = JSON.parse(await readFile(new URL('../data/manifest.json', import.meta.url), 'utf8'));
+  const manifest = JSON.parse(await readFile(channelManifest(channel), 'utf8'));
   const current = manifest.versions.find((entry) => entry.version === manifest.default);
   const snapshot = JSON.parse(collect('{cvars={"example","missing","failed"}, atlases={}, symbols={}, globalStrings={"EXAMPLE_LOCALIZED"}}'));
   snapshot.source.clientVersion = current.clientVersion;
+  snapshot.source.channel = channel;
+  snapshot.source.interfaceVersion = channel === 'forever' ? 16001 : 120100;
   await writeFile(file, JSON.stringify(snapshot));
   const client = new Client({ name: 'runtime-integration', version: '1.0.0' });
   const transport = new StdioClientTransport({ command: process.execPath,
-    args: ['src/cli.mjs', '--runtime-data', file], cwd: process.cwd(), stderr: 'pipe' });
+    args: ['src/cli.mjs', '--channel', channel, '--runtime-data', file], cwd: process.cwd(), stderr: 'pipe' });
   try {
     await client.connect(transport);
     const query = async (args) => {
@@ -113,7 +127,7 @@ test('CLI serves a collector snapshot over MCP with build and locale gates', asy
     assert.equal((await query({ name: 'example', kind: 'cvar', version: current.version })).entry.defaultValue, '1');
     assert.equal((await query({ name: 'missing', kind: 'cvar', version: current.version })).missing, true);
     assert.equal((await query({ name: 'failed', kind: 'cvar', version: current.version })).failed, true);
-    assert.equal((await query({ name: 'example', kind: 'cvar', version: '10.0.0' })).available, false);
+    if (channel === 'retail') assert.equal((await query({ name: 'example', kind: 'cvar', version: '10.0.0' })).available, false);
     assert.equal((await query({ name: 'EXAMPLE_LOCALIZED', kind: 'globalstring', version: current.version, locale: 'deDE' })).available, false);
   } finally { await client.close(); }
 });

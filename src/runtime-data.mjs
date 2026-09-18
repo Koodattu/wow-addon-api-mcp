@@ -1,5 +1,6 @@
 import { readFile, stat } from 'node:fs/promises';
 import * as z from 'zod/v4';
+import { matchesChannel } from './channels.mjs';
 
 const name = z.string().min(1).max(200).regex(/^[A-Za-z0-9_.:$\/-]+$/);
 const names = z.array(name).max(2000).refine((values) => new Set(values).size === values.length, 'Duplicate requested name');
@@ -9,7 +10,7 @@ const coordinate = z.number().finite();
 export const runtimeSchema = z.object({
   schemaVersion: z.literal(1),
   source: z.object({
-    kind: z.literal('wow-client-observation'), channel: z.literal('retail'),
+    kind: z.literal('wow-client-observation'), channel: z.enum(['retail', 'forever']),
     clientVersion: z.string().regex(/^\d+\.\d+\.\d+\.\d+$/),
     locale: z.enum(['deDE', 'enUS', 'esES', 'esMX', 'frFR', 'itIT', 'koKR', 'ptBR', 'ruRU', 'zhCN', 'zhTW']),
     collectorVersion: z.literal('1'),
@@ -28,6 +29,9 @@ export const runtimeSchema = z.object({
   failed: z.object({ cvars: names, atlases: names, symbols: names, globalStrings: names }).strict(),
   missing: z.object({ cvars: names, atlases: names, symbols: names, globalStrings: names }).strict(),
 }).strict().superRefine((data, context) => {
+  if (!matchesChannel(data.source.clientVersion, data.source.channel)) {
+    context.addIssue({ code: 'custom', path: ['source', 'channel'], message: 'Client version does not match the snapshot channel' });
+  }
   for (const kind of Object.keys(data.records)) {
     const requested = new Set(data.requested[kind]);
     const found = data.records[kind].map((record) => record.name);
@@ -51,8 +55,8 @@ export async function loadRuntimeData(file) {
 
 export function runtimeLookup(snapshot, name, kind, info, locale) {
   if (!snapshot) return { available: false, reason: 'No local runtime snapshot loaded. Collect selected names with tools/WowApiSnapshot and start with --runtime-data snapshot.json.' };
-  if (snapshot.source.clientVersion !== info.clientVersion || (locale && snapshot.source.locale !== locale)) {
-    return { available: false, source: snapshot.source, reason: 'The local snapshot does not match the selected build or requested locale.' };
+  if (snapshot.source.channel !== (info.channel ?? 'retail') || snapshot.source.clientVersion !== info.clientVersion || (locale && snapshot.source.locale !== locale)) {
+    return { available: false, source: snapshot.source, reason: 'The local snapshot does not match the selected channel, build, or requested locale.' };
   }
   const category = { cvar: 'cvars', atlas: 'atlases', symbol: 'symbols', globalstring: 'globalStrings' }[kind];
   const requested = snapshot.requested[category].includes(name);

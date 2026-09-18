@@ -1,10 +1,12 @@
+import { channelProfile } from './channels.mjs';
+
 function title(entryKind, entry) {
   return entry.fullName ?? entry.literalName ?? entry.name ?? entryKind;
 }
 
 export function datasetLabel(info) {
   const entry = info.selected ?? info;
-  return `Retail ${entry.version} build ${entry.build ?? 'unknown'} (${entry.clientVersion})`;
+  return `${channelProfile(entry.channel ?? info.channel).label} ${entry.version} build ${entry.build ?? 'unknown'} (${entry.clientVersion})`;
 }
 
 function section(label, value) {
@@ -64,7 +66,7 @@ export function formatNamespace(namespace, result, info) {
 }
 
 export function formatVersions(entries) {
-  return [`# Supported retail versions (${entries.length})`, '', ...entries.map((entry) => (
+  return [`# Supported ${entries[0]?.channel ?? 'retail'} versions (${entries.length})`, '', ...entries.map((entry) => (
     `- ${entry.version}${entry.default ? ' (latest)' : ''}: build ${entry.build}, ${entry.commitDate.slice(0, 10)}, commit ${entry.commit.slice(0, 12)}`
   ))].join('\n');
 }

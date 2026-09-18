@@ -1,13 +1,12 @@
 import { spawnSync } from 'node:child_process';
 import { mkdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { channelManifest, channelProfile, matchesChannel } from '../src/channels.mjs';
 
 import { extractDataset } from './lib/extract-dataset.mjs';
 import { patchVersion, readManifest, updateManifest } from './lib/dataset-manifest.mjs';
 import { writeArchive } from './lib/dataset-archive.mjs';
-
-const DEFAULT_SOURCE = path.resolve('.cache', 'wow-ui-source');
-const DEFAULT_MANIFEST = path.resolve('data', 'manifest.json');
 
 function option(name, fallback) {
   const index = process.argv.indexOf(name);
@@ -33,7 +32,9 @@ function git(sourceRoot, ...args) {
   return result.stdout.trim();
 }
 
-function validateDataset(dataset) {
+export function validateDataset(dataset) {
+  const channel = dataset.source.channel ?? 'retail';
+  if (!matchesChannel(dataset.source.version, channel)) throw new Error(`Client version ${dataset.source.version} does not belong to ${channel}`);
   if (dataset.schemaVersion !== 1) throw new Error('Unexpected dataset schema version');
   if (dataset.stats.systems < 300) throw new Error(`Only ${dataset.stats.systems} API systems were extracted`);
   if (dataset.stats.functions < 1500) throw new Error(`Only ${dataset.stats.functions} API functions were extracted`);
@@ -52,7 +53,7 @@ function validateDataset(dataset) {
     }
   }
 
-  if (Number.parseInt(dataset.source.version, 10) >= 12) {
+  if (channel === 'forever' || Number.parseInt(dataset.source.version, 10) >= 12) {
     const hasSecurityMetadata = dataset.functions.some((entry) => Object.keys(entry.metadata).some((key) => (
       key === 'SecretArguments' || key === 'HasRestrictions' || key === 'RequiresUnitAuraAccess'
     )));
@@ -61,18 +62,24 @@ function validateDataset(dataset) {
 }
 
 async function main() {
-  const sourceRoot = option('--source', DEFAULT_SOURCE);
-  const manifestPath = option('--manifest', DEFAULT_MANIFEST);
+  const channel = stringOption('--channel', 'retail');
+  const profile = channelProfile(channel);
+  const sourceRoot = option('--source', path.resolve('.cache', channel === 'retail' ? 'wow-ui-source' : 'wow-ui-forever'));
+  const manifestPath = option('--manifest', fileURLToPath(channelManifest(channel)));
   const suppliedVersion = stringOption('--client-version', null);
   const version = suppliedVersion ?? (await readFile(path.join(sourceRoot, 'version.txt'), 'utf8')).trim();
   const parsedVersion = patchVersion(version);
-  const output = option('--output', path.join(path.dirname(manifestPath), 'retail', `${parsedVersion.version}.json.gz`));
+  if (!matchesChannel(version, channel)) throw new Error(`Client version ${version} does not belong to ${channel}`);
+  const previousManifest = await readManifest(manifestPath, channel);
+  if (previousManifest.channel !== channel) throw new Error(`Cannot write ${channel} data into a ${previousManifest.channel} manifest`);
+  const output = option('--output', path.join(path.dirname(manifestPath), channel === 'retail' ? 'retail' : 'snapshots', `${parsedVersion.version}.json.gz`));
   const commit = git(sourceRoot, 'rev-parse', 'HEAD');
   const commitDate = git(sourceRoot, 'show', '-s', '--format=%cI', 'HEAD');
-  const branch = git(sourceRoot, 'branch', '--show-current') || 'live';
+  const branch = git(sourceRoot, 'branch', '--show-current') || profile.branch;
 
   const dataset = await extractDataset(sourceRoot, {
     repository: 'https://github.com/Gethe/wow-ui-source',
+    ...(channel === 'retail' ? {} : { channel }),
     branch,
     version,
     patch: parsedVersion.version,
@@ -82,7 +89,7 @@ async function main() {
   }, { includeResources: !process.argv.includes('--api-only'), allowPartialResources: process.argv.includes('--allow-partial-resources') });
   validateDataset(dataset);
 
-  const previous = (await readManifest(manifestPath)).versions.find((entry) => entry.version === parsedVersion.version);
+  const previous = previousManifest.versions.find((entry) => entry.version === parsedVersion.version);
   let resourceMetadata = {};
   if (dataset.resources) {
     const resourceFile = `resources/${parsedVersion.version}.json.gz`;
@@ -106,12 +113,12 @@ async function main() {
     file: relativeFile,
     stats: dataset.stats,
     ...resourceMetadata,
-  });
+  }, channel);
 
   console.log(JSON.stringify({ output, manifest: manifestPath, default: manifest.default, bytes, source: dataset.source, stats: dataset.stats, ...resourceMetadata }, null, 2));
 }
 
-main().catch((error) => {
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main().catch((error) => {
   console.error(error.message);
   process.exitCode = 1;
 });

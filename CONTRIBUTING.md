@@ -17,7 +17,11 @@ Generated snapshots and `data/manifest.json` are committed intentionally. Do not
 
 `npm run data:update` refreshes only the current retail patch from Gethe's `live` branch. When Blizzard starts a new patch family, the build adds a new `data/retail/<patch>.json.gz` entry and makes it the manifest default. A later build in that patch replaces the same canonical snapshot.
 
+`npm run data:update -- --channel forever --allow-partial-resources` refreshes Forever beta from Gethe's `forever` branch into the separate `data/forever/` manifest and archives. The explicit partial-resource flag records the known EquipmentFlyout include ambiguity; tests reject unreviewed additional gaps. Never insert Forever versions into the Retail manifest. See [Forever support](docs/FOREVER.md) for the supported client family and remaining in-client checks.
+
 `npm run data:history` rebuilds API snapshots from upstream Git history. Use `--from` and `--to` to limit the range, and `--pinned` to retain manifest commits instead of selecting newer patch commits. The command requires the Gethe repository at `.cache/wow-ui-source` and temporarily checks out historical commits under `.cache/`.
+
+History builds accept `--channel forever`, using `.cache/wow-ui-forever` and the Forever manifest. History and latest selection remain local to each channel.
 
 Add `--resources` to history builds to generate separate resource archives. Historical missing/ambiguous includes require `--allow-partial-resources`, which records explicit coverage issues. Strict extraction remains the default for current refreshes. A direct `build-dataset.mjs --api-only` build avoids supplementary extraction and preserves existing resource metadata only for the same source commit. API and resource archives must agree on source provenance.
 

@@ -74,5 +74,20 @@ jobs:
           assert.ok(readFileSync('data/' + entry.file).equals(readFileSync('.cache/api-check/snapshot.json.gz')), 'Historical API archive drift');
           assert.ok(readFileSync('data/' + entry.resourceFile).equals(readFileSync('.cache/resource-check/' + entry.resourceFile)), 'Historical resource archive drift');
           NODE
+      - name: Resolve pinned Forever source
+        if: matrix.node == 24
+        id: forever
+        run: node -e "const m=require('./data/forever/manifest.json');console.log('commit='+m.versions.find(v=>v.version===m.default).commit)" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@v7
+        if: matrix.node == 24
+        with:
+          repository: Gethe/wow-ui-source
+          ref: ${{ steps.forever.outputs.commit }}
+          path: .cache/wow-ui-forever
+      - name: Verify deterministic Forever extraction
+        if: matrix.node == 24
+        run: |
+          npm run data:build -- --channel forever --allow-partial-resources
+          git diff --exit-code -- data/forever
       - if: matrix.node == 24
         run: npm run pack:check

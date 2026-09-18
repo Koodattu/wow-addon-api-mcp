@@ -25,16 +25,23 @@ jobs:
           ref: live
           fetch-depth: 1
           path: .cache/wow-ui-source
+      - uses: actions/checkout@v7
+        with:
+          repository: Gethe/wow-ui-source
+          ref: forever
+          fetch-depth: 1
+          path: .cache/wow-ui-forever
       - uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: npm
       - run: npm ci
       - run: npm run data:build
+      - run: npm run data:build -- --channel forever --allow-partial-resources
       - id: changed
         shell: bash
         run: |
-          if [ -z "$(git status --porcelain -- data/manifest.json data/retail data/resources)" ]; then
+          if [ -z "$(git status --porcelain -- data/manifest.json data/retail data/resources data/forever)" ]; then
             echo "value=false" >> "$GITHUB_OUTPUT"
           else
             echo "value=true" >> "$GITHUB_OUTPUT"
@@ -51,24 +58,29 @@ jobs:
           WOW_VERSION=$(node -e "const m=require('./data/manifest.json');const e=m.versions.find(v=>v.version===m.default);console.log(e.clientVersion)")
           echo "version=$PACKAGE_VERSION" >> "$GITHUB_OUTPUT"
           echo "wow_version=$WOW_VERSION" >> "$GITHUB_OUTPUT"
+          FOREVER_VERSION=$(node -e "const m=require('./data/forever/manifest.json');console.log(m.versions.find(v=>v.version===m.default).clientVersion)")
+          echo "forever_version=$FOREVER_VERSION" >> "$GITHUB_OUTPUT"
       - if: steps.changed.outputs.value == 'true'
         id: pull-request
         uses: peter-evans/create-pull-request@v8
         with:
           branch: automation/wow-api-data
           delete-branch: true
-          commit-message: "data: refresh WoW API to ${{ steps.summary.outputs.wow_version }}"
-          title: "data: refresh WoW API to ${{ steps.summary.outputs.wow_version }}"
+          commit-message: "data: refresh Retail ${{ steps.summary.outputs.wow_version }} and Forever ${{ steps.summary.outputs.forever_version }}"
+          title: "data: refresh Retail ${{ steps.summary.outputs.wow_version }} and Forever ${{ steps.summary.outputs.forever_version }}"
           body: |
-            Automated refresh from `Gethe/wow-ui-source` `live`.
+            Automated refresh from `Gethe/wow-ui-source` branches `live` and `forever`.
 
             - WoW client: `${{ steps.summary.outputs.wow_version }}`
+            - Forever beta client: `${{ steps.summary.outputs.forever_version }}`
             - npm version: `${{ steps.summary.outputs.version }}`
-            - The version manifest, selected retail snapshot, and MCP integration tests passed in this workflow.
+            - Channel manifests, snapshots, and MCP integration tests passed in this workflow.
+            - Forever resource extraction reports unresolved include paths as partial coverage.
           add-paths: |
             data/manifest.json
             data/retail
             data/resources
+            data/forever
             package.json
             package-lock.json
       - name: Run required CI for refresh pull request

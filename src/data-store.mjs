@@ -1,8 +1,8 @@
 import { gunzipSync } from 'node:zlib';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
+import { channelManifest, channelProfile, matchesChannel } from './channels.mjs';
 
-const DEFAULT_MANIFEST = new URL('../data/manifest.json', import.meta.url);
 const SECURITY_KEY = /(secret|restriction|taint|unsecure|secure|combat|unittoken|unitaura|forbidden|protected)/i;
 
 function normalized(value) {
@@ -148,20 +148,21 @@ export async function loadStore(datasetPath) {
 export class DatasetCatalog {
   constructor(manifest, manifestPath, cacheSize = 2) {
     if (manifest.schemaVersion !== 1) throw new Error(`Unsupported dataset manifest schema: ${manifest.schemaVersion}`);
-    if (manifest.channel !== 'retail') throw new Error(`Unsupported dataset channel: ${manifest.channel}`);
+    channelProfile(manifest.channel);
     if (!Array.isArray(manifest.versions) || manifest.versions.length === 0) throw new Error('Dataset manifest has no versions');
+    if (manifest.versions.some((entry) => !matchesChannel(entry.clientVersion, manifest.channel))) throw new Error('Dataset manifest mixes client channels');
     this.manifest = manifest;
     this.manifestPath = manifestPath;
     this.cacheSize = cacheSize;
     this.cache = new Map();
     this.resourceCache = new Map();
-    this.entries = new Map(manifest.versions.map((entry) => [entry.version, entry]));
+    this.entries = new Map(manifest.versions.map((entry) => [entry.version, { ...entry, channel: manifest.channel }]));
     if (this.entries.size !== manifest.versions.length) throw new Error('Dataset manifest contains duplicate versions');
     if (!this.entries.has(manifest.default)) throw new Error(`Dataset manifest default is unavailable: ${manifest.default}`);
   }
 
   listVersions() {
-    return this.manifest.versions.map((entry) => ({ ...entry, default: entry.version === this.manifest.default }));
+    return this.manifest.versions.map((entry) => ({ ...entry, channel: this.manifest.channel, default: entry.version === this.manifest.default }));
   }
 
   resolve(version = 'latest') {
@@ -176,7 +177,7 @@ export class DatasetCatalog {
 
     const normalizedPatch = /^(\d+\.\d+)$/.test(requested) ? `${requested}.0` : null;
     if (normalizedPatch && this.entries.has(normalizedPatch)) return normalizedPatch;
-    throw new Error(`Unsupported retail version "${requested}". Call list_versions for valid values.`);
+    throw new Error(`Unsupported ${this.manifest.channel} version "${requested}". Call list_versions for valid values.`);
   }
 
   entry(version = 'latest') {
@@ -200,7 +201,7 @@ export class DatasetCatalog {
     const fromIndex = this.manifest.versions.findIndex((entry) => entry.version === from);
     const toIndex = this.manifest.versions.findIndex((entry) => entry.version === to);
     if (fromIndex > toIndex) throw new Error(`from_version ${from} is newer than to_version ${to}`);
-    return this.manifest.versions.slice(fromIndex, toIndex + 1);
+    return this.manifest.versions.slice(fromIndex, toIndex + 1).map((entry) => this.entry(entry.version));
   }
 
   datasetPath(entry) {
@@ -214,7 +215,8 @@ export class DatasetCatalog {
     if (!this.resourceCache.has(entry.version)) {
       const file = this.datasetPath({ file: entry.resourceFile });
       const dataset = JSON.parse(gunzipSync(await readFile(file)));
-      if (dataset.schemaVersion !== 1 || dataset.source.commit !== entry.commit || dataset.source.version !== entry.clientVersion) {
+      if (dataset.schemaVersion !== 1 || dataset.source.commit !== entry.commit || dataset.source.version !== entry.clientVersion
+        || (dataset.source.channel ?? 'retail') !== this.manifest.channel) {
         throw new Error('Resource snapshot does not match the selected API build');
       }
       this.resourceCache.set(entry.version, dataset.resources);
@@ -236,13 +238,18 @@ export class DatasetCatalog {
     }
 
     const store = await loadStore(this.datasetPath(this.entries.get(resolved)));
+    const entry = this.entry(resolved);
+    if (store.dataset.source.commit !== entry.commit || store.dataset.source.version !== entry.clientVersion
+      || (store.dataset.source.channel ?? 'retail') !== this.manifest.channel) throw new Error('API snapshot does not match the selected channel and build');
     this.cache.set(resolved, store);
     while (this.cache.size > this.cacheSize) this.cache.delete(this.cache.keys().next().value);
     return store;
   }
 }
 
-export async function loadCatalog(manifestPath = DEFAULT_MANIFEST, options = {}) {
+export async function loadCatalog(manifestPath, options = {}) {
+  manifestPath ??= channelManifest(options.channel);
   const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
+  if (options.channel && manifest.channel !== options.channel) throw new Error('Manifest does not match the requested channel');
   return new DatasetCatalog(manifest, manifestPath, options.cacheSize ?? 2);
 }
