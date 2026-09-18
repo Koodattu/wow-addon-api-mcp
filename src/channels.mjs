@@ -3,6 +3,8 @@ const channels = {
   forever: { label: 'Forever beta', branch: 'forever', family: 'Mainline', game: 'Camelot', manifest: '../data/forever/manifest.json' },
 };
 
+export const CHANNELS = Object.keys(channels);
+
 export function channelProfile(channel = 'retail') {
   const profile = channels[channel];
   if (!Object.hasOwn(channels, channel)) throw new Error(`Unsupported channel "${channel}". Use retail or forever.`);

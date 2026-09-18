@@ -4,15 +4,17 @@ A standalone, version-aware Model Context Protocol server for the World of Warcr
 
 The archive contains retail patch snapshots from `10.0.0` onward, including Blizzard's secret-value and restricted-API metadata. Use `--dataset-info` for the bundled default build and `--list-versions` for the complete patch catalog. Every result identifies the selected patch and build so an LLM does not silently mix APIs from different versions.
 
-Retail remains the default. Start with `--channel forever` to select the separate Forever beta catalog, beginning with `1.60.1`. Each server uses one channel for all queries, history, resource lookups, and runtime observations. `latest` means the latest bundled snapshot in that channel; it does not query a live service.
+One server exposes both Retail and Forever beta catalogs. Every single-build query requires `channel` (`retail` or `forever`) and `version`. `latest` means the latest bundled snapshot in the explicitly selected channel; it does not query a live service. Forever coverage begins with `1.60.1`.
 
 ```shell
-npx -y wow-addon-api-mcp@latest --channel forever
-npx -y wow-addon-api-mcp@latest --channel forever --dataset-info
-npx -y wow-addon-api-mcp@latest --channel forever --list-versions
+npx -y wow-addon-api-mcp@latest
+npx -y wow-addon-api-mcp@latest --dataset-info
+npx -y wow-addon-api-mcp@latest --list-versions
 ```
 
-To use both games, configure two MCP servers with different names and add `--channel forever` to the Forever server's arguments. Explicit versions must belong to that server's channel; cross-channel comparisons are rejected. Forever source documentation does not establish runtime availability for every API shared with Retail.
+Configure a single MCP server when developing for both games. Queries cannot fall back to another channel, and comparisons explicitly select both sides. Forever source documentation does not establish runtime availability for every API shared with Retail.
+
+Upgrading from 0.4: the default server now requires per-call selectors. For compatibility with existing calls that omit them, start with `--channel retail` or `--channel forever`. This restricts the server to that game and preserves the default latest version; requests for the other game fail explicitly.
 
 ## Install
 
@@ -64,14 +66,14 @@ Use `"command": "cmd"` and prefix the arguments with `"/c"` on Windows if the cl
 - Public methods discovered from intrinsic FrameXML widgets such as `AuraContainer` and `AuraButton`
 - Raw API constraints including `SecretArguments`, `HasRestrictions`, `RequiresUnitAuraAccess`, `ConditionalSecretContents`, `NeverSecret`, and related fields
 - The exact upstream client build, commit, and source file for each snapshot
-- Supplementary source symbols, XML templates, mixins, named UI objects, and literal CVar/atlas references selected for the server's channel, with declaration/reference labels and source line links
+- Supplementary source symbols, XML templates, mixins, named UI objects, and literal CVar/atlas references selected for the query's channel, with declaration/reference labels and source line links
 
 The server exposes these tools:
 
 | Tool | Purpose |
 | --- | --- |
 | `get_dataset_info` | Resolve a version and show its WoW build, upstream commit, and entry counts |
-| `list_versions` | List every supported patch, build, date, and source commit in the selected channel |
+| `list_versions` | List both catalogs with exact builds and commits; optionally filter by channel |
 | `lookup_api` | Exact lookup across functions, methods, events, enums, structures, widgets, and systems |
 | `search_api` | Ranked name and official-documentation search |
 | `get_namespace` | List a namespace's functions, events, and types |
@@ -79,7 +81,7 @@ The server exposes these tools:
 | `get_enum` | Show an enum and its values |
 | `get_event` | Show an event and its payload |
 | `search_restrictions` | Find security-, taint-, secret-, combat-, and aura-restricted APIs |
-| `compare_api` | Compare one exact API between two patches in the selected channel |
+| `compare_api` | Compare one exact API between two explicit channel/version pairs |
 | `diff_versions` | List added, removed, and structurally changed APIs, optionally by kind or namespace |
 | `get_api_history` | Show when an exact API appeared, disappeared, or changed |
 | `lookup_resource` | Find exact supplementary resource names and their source declarations/references |
@@ -88,9 +90,28 @@ The server exposes these tools:
 | `get_migration_guidance` | Read sourced guidance for a legacy API and target build |
 | `lookup_runtime_resource` | Query an optional local snapshot for CVar defaults, atlas geometry, symbol types, or localized strings |
 
-All single-version query tools accept an optional `version`. It can be a patch (`12.1.0` or `12.1`), full client version or build number returned by `list_versions`, or `latest`. Omitting it selects the manifest's current default.
+All single-version query tools require `channel` and `version`. A version can be a patch (`12.1.0` or `12.1`), full client version or build number returned by `list_versions`, or explicit `latest`. Pin a full client version when developing against a specific installed build.
 
-Supplementary tools accept `query`, optional `kind` (`symbol`, `template`, `mixin`, `frame`, `cvar`, or `atlas`), `version`, `limit`, and `offset`. Follow `nextOffset` to retrieve more matches. For example, use `lookup_resource` with `query: "BackdropTemplate"` and `kind: "template"` to inspect inheritance and attached mixins.
+For example, call `lookup_api` with either of these argument objects:
+
+```json
+{"name":"C_UnitAuras.GetAuraDataByIndex","channel":"retail","version":"latest"}
+{"name":"C_UnitAuras.GetAuraDataByIndex","channel":"forever","version":"1.60.1.69913"}
+```
+
+`compare_api` and `diff_versions` require `from_channel`, `from_version`, `to_channel`, and `to_version`. They can compare builds within one game or across games:
+
+```json
+{"name":"C_GamepadTargeting.Enable","from_channel":"retail","from_version":"latest","to_channel":"forever","to_version":"latest"}
+```
+
+Across games, added/removed means present only in the target/source catalog; it does not establish a chronological API change. `get_api_history` requires one `channel` and accepts optional `from_version` and `to_version` bounds. It never mixes game histories.
+
+For Codex projects, an `AGENTS.md` instruction can make the intended targets explicit:
+
+> This addon targets Retail and Forever. Discover available builds with `list_versions`, then specify channel and version on every build-specific WoW MCP call. Check shared APIs against both target builds and preserve their restriction metadata. Do not assume the same API behaves identically across games.
+
+Supplementary tools require `query`, `channel`, and `version`, and accept optional `kind` (`symbol`, `template`, `mixin`, `frame`, `cvar`, or `atlas`), `limit`, and `offset`. Follow `nextOffset` to retrieve more matches. For example, use `lookup_resource` with `query: "BackdropTemplate"`, `kind: "template"`, `channel: "retail"`, and `version: "latest"` to inspect inheritance and attached mixins.
 
 All 26 bundled retail patches have supplementary resource archives. The 11 snapshots from `10.0.0` through `10.2.7` report partial coverage with explicit missing or ambiguous include paths; the 15 later snapshots have complete coverage of the selected source graph. Complete source extraction does not mean complete runtime coverage. Resource archives load separately on demand, so API history queries do not inflate them.
 
@@ -108,17 +129,23 @@ The package includes a small `WowApiSnapshot` addon for explicitly requested nam
 npx -y wow-addon-api-mcp@latest --runtime-data /absolute/path/snapshot.json
 ```
 
-Alternatively set `WOW_API_RUNTIME_DATA` to that path. `lookup_runtime_resource` requires an exact catalog build match. Pass `locale` when the answer must match a particular locale; otherwise the response identifies the snapshot's locale. Results distinguish unrequested, missing, failed, and found names. They are observations from that client session, not guaranteed contracts or permission to redistribute captured content. No Ketho or Wago runtime dumps are bundled. The collector core is tested offline; its UI and game-specific behavior still require [in-client validation](docs/VALIDATION.md).
+Alternatively set `WOW_API_RUNTIME_DATA` to one path. Repeat `--runtime-data` to load snapshots for both games or multiple builds/locales in the same process:
 
-For a Forever observation, also pass `--channel forever`. The collector identifies supported `1.60.x` builds separately from Retail, and imports require the selected channel as well as the exact build and requested locale. Curated engine contracts and migration guidance remain limited to their reviewed Retail build; they are not extrapolated to Forever.
+```shell
+npx -y wow-addon-api-mcp@latest --runtime-data /absolute/path/retail.json --runtime-data /absolute/path/forever.json
+```
+
+Explicit file arguments override the environment variable. `lookup_runtime_resource` requires `channel` and `version` with an exact catalog build match. Pass `locale` when the answer must match a particular locale; it is required when multiple locales match the selected build. Duplicate snapshots for the same channel/build/locale are rejected. Results distinguish unrequested, missing, failed, and found names. They are observations from that client session, not guaranteed contracts or permission to redistribute captured content. No Ketho or Wago runtime dumps are bundled. The collector core is tested offline; its UI and game-specific behavior still require [in-client validation](docs/VALIDATION.md).
+
+For a Forever observation, set `channel: "forever"` on the tool call. The collector identifies supported `1.60.x` builds separately from Retail, and imports require the selected channel as well as the exact build and requested locale. Curated engine contracts and migration guidance remain limited to their reviewed Retail build; they are not extrapolated to Forever.
 
 For an old-addon migration, a useful LLM workflow is:
 
-1. Call `list_versions` and choose the closest source patch.
-2. Use `compare_api` for APIs the addon already calls.
+1. Call `list_versions` and choose the source and target channel/build pairs.
+2. Use `compare_api` for APIs the addon already calls, specifying both pairs.
 3. Use a namespace-filtered `diff_versions` to discover related changes.
 4. Use `get_api_history` when documentation coverage changed, and `get_migration_guidance` for separately sourced replacement guidance.
-5. Query the current patch normally and preserve all returned restriction metadata.
+5. Query each target channel/build explicitly and preserve all returned restriction metadata.
 
 Check the installed data without starting an MCP session:
 

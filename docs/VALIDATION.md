@@ -1,9 +1,10 @@
-# Validation scope for 0.4.0
+# Validation scope for 0.5.0
 
 ## Automated evidence
 
 - The test suite exercises MCP stdio queries, exact-name precedence, security metadata, migration comparisons, source extraction, curated provenance/build gates, and optional runtime data validation.
-- Forever checks cover channel isolation, beta version/build aliases, history, restricted API metadata, Mainline/Camelot source selection, the known partial-resource issue, MCP stdio responses, and runtime observations. Retail remains the default. See [Forever support](FOREVER.md) for the pinned beta source and its limitations.
+- Forever checks cover channel isolation, beta version/build aliases, history, restricted API metadata, Mainline/Camelot source selection, the known partial-resource issue, MCP stdio responses, and runtime observations. See [Forever support](FOREVER.md) for the pinned beta source and its limitations.
+- Default-server checks exercise required per-call selectors, both catalogs, concurrent queries across all single-build tools, exact provenance, invalid channel/build pairs, cross-channel comparisons, and single-channel compatibility mode. Runtime checks load both games and multiple locales in one process, reject duplicate identities, and require locale selection when ambiguous.
 - All 26 resource archives are checked against manifest provenance, actual record counts, and coverage diagnostics. Eleven snapshots from 10.0.0 through 10.2.7 are explicitly partial; 15 from 11.0.0 onward have complete selected-source coverage. Missing/ambiguous includes remain visible instead of being guessed or silently ignored.
 - During backfill, API output from every pinned checkout was compared with the retained serialized API data. No historical API content changed. Resources moved into separate compressed archives and separate bounded caches.
 - CI tests Node 20, 22, and 24. Node 24 also rebuilds the current Retail and Forever sources deterministically and rebuilds both API-only and partial resources for the oldest pinned Retail source. Intermediate source extraction is covered by the release backfill and archive validation, not 26 upstream checkouts on every CI run.
@@ -14,7 +15,7 @@
 
 Use a retail client matching a bundled full build, outside combat, with the collector enabled. Run `/wowapisnapshot`, copy and parse its JSON, and verify build, interface version, locale, and capture time. Compare the requested CVar default and flags with direct `C_CVar.GetCVarInfo` results while confirming the current setting is absent. Compare atlas geometry with `C_Texture.GetAtlasInfo`. Verify an existing and an unknown symbol, and an explicitly requested localized key with placeholders. Restart the MCP server with that file and check matching/mismatching versions and locales. Repeat in another locale if localized output is required.
 
-Repeat these checks on the matching Forever beta client with `--channel forever`. Confirm that the addon loads with interface `16001`, records `channel: forever`, and identifies the expected Mainline project. Confirm that a Retail server refuses to serve that observation. Neither game's export UI or real-client behavior has been validated by the offline tests.
+Repeat these checks on the matching Forever beta client. Confirm that the addon loads with interface `16001`, records `channel: forever`, and identifies the expected Mainline project. Load both snapshots in one MCP process with repeated `--runtime-data` arguments, then query each with its channel and exact build. Confirm that a Retail query cannot serve a Forever observation. Also check the restricted `--channel forever` compatibility mode. Neither game's export UI or real-client behavior has been validated by the offline tests.
 
 The export window, selection/copy behavior, client-specific restrictions, and secret-value behavior need these real-client checks. There is no automated claim of passing them. Core engine contracts are documentation-reviewed for 12.1.0.69587, not combat/taint-certified. A future in-client harness should test secure/insecure execution and hook behavior without extrapolating from a mocked Lua environment.
 

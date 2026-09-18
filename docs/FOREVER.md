@@ -4,9 +4,9 @@ Audited September 18, 2026, against Gethe's mirror of Blizzard source for Foreve
 
 ## Channel boundaries
 
-`--channel forever` selects `data/forever/manifest.json`. Omitting the flag selects the existing Retail manifest. Each channel has its own latest version, history, API archives, and resource archives. Unsupported channels and versions fail explicitly. A build cannot insert a Forever snapshot into a Retail manifest or vice versa. Existing Retail command lines and archive formats remain supported.
+By default one server exposes both the Retail manifest and `data/forever/manifest.json`. Single-build tools require `channel` and `version`. Each channel has its own latest version, history, API archives, and resource archives. Unsupported channels and versions fail explicitly. A build cannot insert a Forever snapshot into a Retail manifest or vice versa. Archive formats remain unchanged.
 
-The channel is a server startup option, not a per-query switch. Configure two named MCP servers when both games are needed. Every query result identifies its channel, patch, and build. Cross-channel history and comparisons are intentionally unavailable.
+Use one MCP server for both games. Every build-specific result identifies its channel, patch, full client version, build, and source commit. Comparisons require explicit source and target channel/version pairs and may cross channels; their added/removed labels describe catalog presence, not chronological game changes. History stays within one explicit channel. `--channel retail` or `--channel forever` restricts the server to one game as a compatibility mode, allowing existing calls to omit channel/version and use that game's latest snapshot.
 
 ## Source extraction
 
@@ -18,7 +18,7 @@ The initial resource archive is explicitly partial. [Camelot/EquipmentFlyout.xml
 
 ## Runtime observations and curated contracts
 
-The collector supports Retail and the reviewed Forever `1.60.x` version family, records a separate channel, and declares both interface versions in its TOC. Runtime imports require a matching channel and exact client version, with optional locale matching. The client project identifier alone is insufficient to distinguish these Mainline-family clients.
+The collector supports Retail and the reviewed Forever `1.60.x` version family, records a separate channel, and declares both interface versions in its TOC. Repeat `--runtime-data` to load observations for both games in one process. Runtime queries require a matching channel and exact client version; specify locale when multiple locales match. Duplicate channel/build/locale imports are rejected. The client project identifier alone is insufficient to distinguish these Mainline-family clients.
 
 Collector tests use mocked game APIs. Loading the addon, its export window, actual project identification, and observations in and out of combat still require beta-client validation. This release does not claim in-client testing. Curated engine contracts remain tied to their reviewed Retail build; no Forever applicability is inferred.
 

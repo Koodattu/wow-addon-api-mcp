@@ -53,7 +53,26 @@ export async function loadRuntimeData(file) {
   return result.data;
 }
 
+export async function loadRuntimeSnapshots(files) {
+  const snapshots = await Promise.all((Array.isArray(files) ? files : files ? [files] : []).map(loadRuntimeData));
+  const identities = new Set();
+  for (const snapshot of snapshots) {
+    const { channel, clientVersion, locale } = snapshot.source;
+    const identity = JSON.stringify([channel, clientVersion, locale]);
+    if (identities.has(identity)) throw new Error(`Duplicate runtime snapshot for ${channel} ${clientVersion} ${locale}`);
+    identities.add(identity);
+  }
+  return snapshots;
+}
+
 export function runtimeLookup(snapshot, name, kind, info, locale) {
+  if (Array.isArray(snapshot)) {
+    const matches = snapshot.filter(({ source }) => source.channel === (info.channel ?? 'retail')
+      && source.clientVersion === info.clientVersion && (!locale || source.locale === locale));
+    if (matches.length > 1) return { available: false, reason: 'Multiple locales are available for this build. Specify locale to select an observation.' };
+    if (snapshot.length && !matches.length) return { available: false, reason: 'No local snapshot matches the selected channel, build, and requested locale.' };
+    snapshot = matches[0];
+  }
   if (!snapshot) return { available: false, reason: 'No local runtime snapshot loaded. Collect selected names with tools/WowApiSnapshot and start with --runtime-data snapshot.json.' };
   if (snapshot.source.channel !== (info.channel ?? 'retail') || snapshot.source.clientVersion !== info.clientVersion || (locale && snapshot.source.locale !== locale)) {
     return { available: false, source: snapshot.source, reason: 'The local snapshot does not match the selected channel, build, or requested locale.' };

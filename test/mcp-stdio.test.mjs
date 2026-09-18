@@ -5,13 +5,13 @@ import test from 'node:test';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
 
-test('serves the bundled docs over MCP stdio', { timeout: 20_000 }, async () => {
+test('Retail compatibility mode serves the bundled docs over MCP stdio', { timeout: 20_000 }, async () => {
   const manifest = JSON.parse(await readFile(new URL('../data/manifest.json', import.meta.url), 'utf8'));
   const current = manifest.versions.find((entry) => entry.version === manifest.default);
   const client = new Client({ name: 'wow-addon-api-test', version: '1.0.0' }, { capabilities: {} });
   const transport = new StdioClientTransport({
     command: process.execPath,
-    args: ['src/cli.mjs'],
+    args: ['src/cli.mjs', '--channel', 'retail'],
     cwd: process.cwd(),
     stderr: 'pipe',
   });
@@ -50,7 +50,7 @@ test('serves the bundled docs over MCP stdio', { timeout: 20_000 }, async () => 
       arguments: { name: 'C_UnitAuras.GetAuraDataByIndex', kind: 'function' },
     });
     const text = result.content.find((item) => item.type === 'text').text;
-    assert.equal(text.split('\n')[0], `Dataset: Retail ${current.version} build ${current.build} (${current.clientVersion})`);
+    assert.equal(text.split('\n')[0], `Dataset: Retail ${current.version} build ${current.build} (${current.clientVersion}; commit ${current.commit})`);
     assert.ok(text.includes(`/blob/${current.commit}/`));
     assert.match(text, /RequiresUnitAuraAccess/);
     assert.match(text, /SecretArguments/);

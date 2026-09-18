@@ -6,7 +6,7 @@ function title(entryKind, entry) {
 
 export function datasetLabel(info) {
   const entry = info.selected ?? info;
-  return `${channelProfile(entry.channel ?? info.channel).label} ${entry.version} build ${entry.build ?? 'unknown'} (${entry.clientVersion})`;
+  return `${channelProfile(entry.channel ?? info.channel).label} ${entry.version} build ${entry.build ?? 'unknown'} (${entry.clientVersion}; commit ${entry.commit})`;
 }
 
 function section(label, value) {
@@ -67,12 +67,13 @@ export function formatNamespace(namespace, result, info) {
 
 export function formatVersions(entries) {
   return [`# Supported ${entries[0]?.channel ?? 'retail'} versions (${entries.length})`, '', ...entries.map((entry) => (
-    `- ${entry.version}${entry.default ? ' (latest)' : ''}: build ${entry.build}, ${entry.commitDate.slice(0, 10)}, commit ${entry.commit.slice(0, 12)}`
+    `- ${entry.version}${entry.default ? ' (latest)' : ''}: client ${entry.clientVersion}, build ${entry.build}, ${entry.commitDate.slice(0, 10)}, commit ${entry.commit}`
   ))].join('\n');
 }
 
 export function formatComparison(result) {
   const lines = [`# API comparison: ${datasetLabel(result.from)} → ${datasetLabel(result.to)}`, '', 'Changes describe the generated documentation catalog, not independently verified runtime introduction or removal. Use get_migration_guidance for separately sourced replacements.', ''];
+  if (result.from.channel !== result.to.channel) lines.push('Cross-channel comparison: added/removed means present only in the target/source catalog, not a chronological API change.', '');
   if (result.comparisons.length === 0) return `${lines.join('\n')}No exact matching entry exists in either version.`;
   for (const comparison of result.comparisons) {
     lines.push(`## ${comparison.identity}`, '', `Kind: ${comparison.entryKind}`, `Status: ${comparison.status}`);
@@ -92,6 +93,7 @@ export function formatVersionDiff(result) {
     ...result.changes.map((entry) => `- [${entry.status}] ${entry.entryKind}: ${entry.identity}`),
   ];
   if (result.filters.change !== 'all') lines.splice(4, 0, `Showing ${result.matching} ${result.filters.change} entries.`, '');
+  if (result.from.channel !== result.to.channel) lines.splice(3, 0, 'Cross-channel comparison: added/removed means present only in the target/source catalog, not a chronological API change.');
   if (result.truncated) lines.push('', `Results truncated; increase limit up to 100 (matching ${result.matching}).`);
   return lines.join('\n');
 }
