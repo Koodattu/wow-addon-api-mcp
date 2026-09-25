@@ -680,10 +680,10 @@
     },
     {
       "version": "12.1.0",
-      "clientVersion": "12.1.0.69814",
-      "build": "69814",
-      "commit": "4e3cbb8c5609e4bfc332c0aebbfa4d79731fab59",
-      "commitDate": "2026-09-12T19:01:30Z",
+      "clientVersion": "12.1.0.69933",
+      "build": "69933",
+      "commit": "09b9db7948abc9b9648dedaab51eb0cf3ee67b31",
+      "commitDate": "2026-09-22T14:31:12Z",
       "file": "retail/12.1.0.json.gz",
       "stats": {
         "systems": 612,
