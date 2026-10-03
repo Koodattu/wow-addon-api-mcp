@@ -96,7 +96,7 @@ For example, call `lookup_api` with either of these argument objects:
 
 ```json
 {"name":"C_UnitAuras.GetAuraDataByIndex","channel":"retail","version":"latest"}
-{"name":"C_UnitAuras.GetAuraDataByIndex","channel":"forever","version":"1.60.1.69913"}
+{"name":"C_UnitAuras.GetAuraDataByIndex","channel":"forever","version":"1.60.1.70205"}
 ```
 
 `compare_api` and `diff_versions` require `from_channel`, `from_version`, `to_channel`, and `to_version`. They can compare builds within one game or across games:

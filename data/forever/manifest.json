@@ -5,28 +5,28 @@
   "versions": [
     {
       "version": "1.60.1",
-      "clientVersion": "1.60.1.69913",
-      "build": "69913",
-      "commit": "70ef1b2fd78061a73f886c4a1e79dc5b5cff6d5e",
-      "commitDate": "2026-09-18T03:16:08Z",
+      "clientVersion": "1.60.1.70205",
+      "build": "70205",
+      "commit": "e3ecc27b64d30fdc735a3f6579b866858f9f9df1",
+      "commitDate": "2026-10-03T02:01:07Z",
       "file": "snapshots/1.60.1.json.gz",
       "stats": {
-        "systems": 638,
-        "functions": 5100,
+        "systems": 640,
+        "functions": 5121,
         "methods": 1487,
-        "events": 1802,
-        "enumerations": 887,
-        "structures": 851,
+        "events": 1806,
+        "enumerations": 888,
+        "structures": 855,
         "widgets": 93
       },
       "resourceFile": "resources/1.60.1.json.gz",
       "resourceCounts": {
-        "symbol": 53928,
-        "template": 3269,
-        "mixin": 3021,
-        "frame": 2427,
-        "cvar": 286,
-        "atlas": 2552
+        "symbol": 54151,
+        "template": 3279,
+        "mixin": 3024,
+        "frame": 2430,
+        "cvar": 288,
+        "atlas": 2564
       },
       "resourceCoverage": "partial"
     }
