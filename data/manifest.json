@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "channel": "retail",
-  "default": "12.1.0",
+  "default": "12.1.5",
   "versions": [
     {
       "version": "10.0.0",
@@ -702,6 +702,33 @@
         "frame": 2635,
         "cvar": 277,
         "atlas": 3193
+      },
+      "resourceCoverage": "complete"
+    },
+    {
+      "version": "12.1.5",
+      "clientVersion": "12.1.5.70448",
+      "build": "70448",
+      "commit": "b9be9379719047977fca4dba1bb1d9988e8840b3",
+      "commitDate": "2026-10-16T23:16:10Z",
+      "file": "retail/12.1.5.json.gz",
+      "stats": {
+        "systems": 622,
+        "functions": 4970,
+        "methods": 1480,
+        "events": 1784,
+        "enumerations": 856,
+        "structures": 841,
+        "widgets": 93
+      },
+      "resourceFile": "resources/12.1.5.json.gz",
+      "resourceCounts": {
+        "symbol": 58004,
+        "template": 3581,
+        "mixin": 3323,
+        "frame": 2635,
+        "cvar": 281,
+        "atlas": 3184
       },
       "resourceCoverage": "complete"
     }
