@@ -118,7 +118,7 @@ For Codex projects, an `AGENTS.md` instruction can make the intended targets exp
 
 Supplementary tools require `query`, `channel`, and `version`, and accept optional `kind` (`symbol`, `template`, `mixin`, `frame`, `cvar`, or `atlas`), `limit`, and `offset`. Follow `nextOffset` to retrieve more matches. For example, use `lookup_resource` with `query: "BackdropTemplate"`, `kind: "template"`, `channel: "retail"`, and `version: "latest"` to inspect inheritance and attached mixins.
 
-All 26 bundled retail patches have supplementary resource archives. The 11 snapshots from `10.0.0` through `10.2.7` report partial coverage with explicit missing or ambiguous include paths; the 15 later snapshots have complete coverage of the selected source graph. Complete source extraction does not mean complete runtime coverage. Resource archives load separately on demand, so API history queries do not inflate them.
+All 27 bundled retail patches have supplementary resource archives. The 11 snapshots from `10.0.0` through `10.2.7` report partial coverage with explicit missing or ambiguous include paths; the 16 later snapshots have complete coverage of the selected source graph. Complete source extraction does not mean complete runtime coverage. Resource archives load separately on demand, so API history queries do not inflate them.
 
 Forever resources use the Mainline family and Camelot game filters. The initial beta resource archive reports partial coverage because `Blizzard_FrameXML/Camelot/EquipmentFlyout.xml` refers to `EquipmentFlyout.lua`, which exists at both the sibling and addon-root locations. Results retain the exact issue rather than guessing which include wins. Generated API documentation extraction is unaffected. See [the Forever audit](FOREVER.md).
 
