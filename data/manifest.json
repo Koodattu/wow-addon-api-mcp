@@ -707,10 +707,10 @@
     },
     {
       "version": "12.1.5",
-      "clientVersion": "12.1.5.70783",
-      "build": "70783",
-      "commit": "297d7aaaa736f346b3e036f38ee088eaf7f8c07f",
-      "commitDate": "2026-11-04T00:46:01Z",
+      "clientVersion": "12.1.5.70961",
+      "build": "70961",
+      "commit": "ab5cb850a3f65e742959e379c4689353a2f4549f",
+      "commitDate": "2026-11-18T23:46:07Z",
       "file": "retail/12.1.5.json.gz",
       "stats": {
         "systems": 622,
