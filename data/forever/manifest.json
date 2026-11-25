@@ -5,14 +5,14 @@
   "versions": [
     {
       "version": "1.60.1",
-      "clientVersion": "1.60.1.70959",
-      "build": "70959",
-      "commit": "3d8abb1da73acd38e412e24fb3f99454a6392346",
-      "commitDate": "2026-11-17T15:31:28Z",
+      "clientVersion": "1.60.1.71139",
+      "build": "71139",
+      "commit": "d9c22e32cb240afb82bb2ecefbb78ef935333f59",
+      "commitDate": "2026-11-25T19:16:23Z",
       "file": "snapshots/1.60.1.json.gz",
       "stats": {
         "systems": 642,
-        "functions": 5146,
+        "functions": 5147,
         "methods": 1487,
         "events": 1816,
         "enumerations": 900,
@@ -21,9 +21,9 @@
       },
       "resourceFile": "resources/1.60.1.json.gz",
       "resourceCounts": {
-        "symbol": 54666,
+        "symbol": 54675,
         "template": 3285,
-        "mixin": 3039,
+        "mixin": 3040,
         "frame": 2420,
         "cvar": 291,
         "atlas": 2589
